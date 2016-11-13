@@ -24,6 +24,7 @@ public class CallSlideshow : MonoBehaviour
     public float fadeTime = 2.5f; //duration of a given fade
     public bool hasTitle = true;    //determine whether this is a title or ending sequence
     private bool slidesDone = true;
+    public bool sceneComplete = false;
     private float audioClipLength = 0.0f;
 
     //Deprecated, but keeping if needed
@@ -126,6 +127,8 @@ public class CallSlideshow : MonoBehaviour
             StartCoroutine(fadeObjectOut(titleCanvas, fadeTime));
         }
         yield return null;
+        //update scene completion status
+        sceneComplete = true;
     }
 
     // Use this for initialization
