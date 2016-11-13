@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FadeInSlides : MonoBehaviour {
+public class FadeInSlides : MonoBehaviour
+{
 
     //------------------------------------------------------------------------------------------------------------------------------------
     //READ ME!
@@ -20,7 +21,7 @@ public class FadeInSlides : MonoBehaviour {
     public float fadeDelay = 0.0f;
     public float fadeTime = 0.5f;
     public bool fadeInOnStart = false;
-    public bool fadeOutOnStart = false;
+    public bool fadeOutOnStart = true;
     private bool logInitialFadeSequence = false;
 
     // store colours
@@ -40,7 +41,8 @@ public class FadeInSlides : MonoBehaviour {
 
         if (fadeOutOnStart)
         {
-            FadeOut(fadeTime);
+            //FadeOut(fadeTime);
+            FadeOut(0);
         }
     }
 
