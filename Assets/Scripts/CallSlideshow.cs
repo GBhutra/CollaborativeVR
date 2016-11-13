@@ -24,9 +24,10 @@ public class CallSlideshow : MonoBehaviour
     public float fadeTime = 2.5f; //duration of a given fade
     public bool hasTitle = true;    //determine whether this is a title or ending sequence
     private bool slidesDone = true;
-	public bool fadedOut = false;
-	public bool midfade = false;
+    public bool fadedOut = false;
+    public bool midfade = false;
     public bool sceneComplete = false;
+    private bool isEnding = false;
     private float audioClipLength = 0.0f;
 
     //Deprecated, but keeping if needed
@@ -45,8 +46,7 @@ public class CallSlideshow : MonoBehaviour
     */
 
 
-	/*bool runFunc(){
-
+    /*bool runFunc(){
 	}*/
 
     //coroutine for playing audio; also sets length of currently playing audio for other functions
@@ -80,15 +80,15 @@ public class CallSlideshow : MonoBehaviour
     //create simple routine for calling fade-out for differing objects
     public IEnumerator fadeEachOut(float ft)
     {
-		midfade = true;
+        midfade = true;
         foreach (GameObject slide in slides)
         {
             StartCoroutine(fadeObjectOut(slide, ft));
             //yield return new WaitForSecondsRealtime(transitionDelay);
             yield return null;
         }
-		fadedOut = true;
-		midfade = false;
+        fadedOut = true;
+        midfade = false;
     }
 
 
@@ -96,7 +96,7 @@ public class CallSlideshow : MonoBehaviour
     //fade every slide in and play its audio
     public IEnumerator fadeEachIn(float ft)
     {
-		midfade = true;
+        midfade = true;
         foreach (GameObject slide in slides)
         {
             StartCoroutine(startAudio(slide));
@@ -114,18 +114,19 @@ public class CallSlideshow : MonoBehaviour
         }
         //alert world that the slideshow has finished playing
         slidesDone = true;
-		fadedOut = false;
-		midfade = false;
+        fadedOut = false;
+        midfade = false;
     }
 
     //play slideshow and audio, show title, then fade all three.
     public IEnumerator startSlideshow()
     {
         //play slideshow
-		//fades in each slide sequentially until slides are done, and waits
-		StartCoroutine(fadeEachIn(fadeTime));
+        //fades in each slide sequentially until slides are done, and waits'
+        yield return new WaitForSecondsRealtime(2);
+        StartCoroutine(fadeEachIn(fadeTime));
         slidesDone = false;
-        
+
         while (!slidesDone)
         {
             yield return new WaitForSecondsRealtime(1);
@@ -144,6 +145,7 @@ public class CallSlideshow : MonoBehaviour
         yield return null;
         //update scene completion status
         sceneComplete = true;
+        print("Slideshow done; time to transition");
     }
 
     // Use this for initialization
@@ -152,11 +154,13 @@ public class CallSlideshow : MonoBehaviour
         //activate slideCanvas if not active
         slideCanvas.SetActive(true);
         //getSlides();  //get all slides if need be
+        StartCoroutine(startSlideshow());
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             StartCoroutine(fadeEachOut(fadeTime));
@@ -165,6 +169,12 @@ public class CallSlideshow : MonoBehaviour
         {
             //StartCoroutine(fadeEachIn(fadeTime));
             StartCoroutine(startSlideshow());
+        }
+        */
+        if (sceneComplete)
+        {
+            Application.LoadLevel(Application.loadedLevel + 1);
+            //make sure that we don't go too far when using this script for outro.
         }
     }
 }
