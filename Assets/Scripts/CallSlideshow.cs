@@ -27,7 +27,7 @@ public class CallSlideshow : MonoBehaviour
     public bool fadedOut = false;
     public bool midfade = false;
     public bool sceneComplete = false;
-    private bool isEnding = false;
+    public bool isEnding = false;
     private float audioClipLength = 0.0f;
 
     //Deprecated, but keeping if needed
@@ -154,13 +154,20 @@ public class CallSlideshow : MonoBehaviour
         //activate slideCanvas if not active
         slideCanvas.SetActive(true);
         //getSlides();  //get all slides if need be
-        StartCoroutine(startSlideshow());
+        if (!isEnding)
+        {
+            StartCoroutine(startSlideshow());
+        }
+        else
+        {
+            //do a thing
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
+        
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             StartCoroutine(fadeEachOut(fadeTime));
@@ -170,11 +177,15 @@ public class CallSlideshow : MonoBehaviour
             //StartCoroutine(fadeEachIn(fadeTime));
             StartCoroutine(startSlideshow());
         }
-        */
-        if (sceneComplete)
+        
+        if (sceneComplete && !isEnding)
         {
             Application.LoadLevel(Application.loadedLevel + 1);
             //make sure that we don't go too far when using this script for outro.
+        }
+        else if (sceneComplete && isEnding)
+        {
+            //do a thing
         }
     }
 }
