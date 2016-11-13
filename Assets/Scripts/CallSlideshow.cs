@@ -24,6 +24,8 @@ public class CallSlideshow : MonoBehaviour
     public float fadeTime = 2.5f; //duration of a given fade
     public bool hasTitle = true;    //determine whether this is a title or ending sequence
     private bool slidesDone = true;
+	public bool fadedOut = false;
+	public bool midfade = false;
     public bool sceneComplete = false;
     private float audioClipLength = 0.0f;
 
@@ -43,8 +45,12 @@ public class CallSlideshow : MonoBehaviour
     */
 
 
+	/*bool runFunc(){
+
+	}*/
+
     //coroutine for playing audio; also sets length of currently playing audio for other functions
-    IEnumerator startAudio(GameObject go)
+    public IEnumerator startAudio(GameObject go)
     {
         AudioSource audio = go.transform.FindChild("SlideAudio").GetComponent<AudioSource>();
         audio.Play();
@@ -53,7 +59,7 @@ public class CallSlideshow : MonoBehaviour
     }
 
     //call FadeOut on a given object and its children (prefer to use on slides, but can also be used on canvases)
-    IEnumerator fadeObjectOut(GameObject go, float fadeTime)
+    public IEnumerator fadeObjectOut(GameObject go, float fadeTime)
     {
         go.SetActive(true);
         FadeInSlides fil = (FadeInSlides)go.GetComponent(typeof(FadeInSlides));
@@ -63,7 +69,7 @@ public class CallSlideshow : MonoBehaviour
     }
 
     //call FadeIn on a given object and its children (prefer to use on slides, but can also be used on canvases)
-    IEnumerator fadeObjectIn(GameObject go, float fadeTime)
+    public IEnumerator fadeObjectIn(GameObject go, float fadeTime)
     {
         go.SetActive(true);
         FadeInSlides fil = (FadeInSlides)go.GetComponent(typeof(FadeInSlides));
@@ -72,19 +78,25 @@ public class CallSlideshow : MonoBehaviour
     }
 
     //create simple routine for calling fade-out for differing objects
-    IEnumerator fadeEachOut(float ft)
+    public IEnumerator fadeEachOut(float ft)
     {
+		midfade = true;
         foreach (GameObject slide in slides)
         {
             StartCoroutine(fadeObjectOut(slide, ft));
             //yield return new WaitForSecondsRealtime(transitionDelay);
             yield return null;
         }
+		fadedOut = true;
+		midfade = false;
     }
 
+
+
     //fade every slide in and play its audio
-    IEnumerator fadeEachIn(float ft)
+    public IEnumerator fadeEachIn(float ft)
     {
+		midfade = true;
         foreach (GameObject slide in slides)
         {
             StartCoroutine(startAudio(slide));
@@ -102,15 +114,18 @@ public class CallSlideshow : MonoBehaviour
         }
         //alert world that the slideshow has finished playing
         slidesDone = true;
+		fadedOut = false;
+		midfade = false;
     }
 
     //play slideshow and audio, show title, then fade all three.
-    IEnumerator startSlideshow()
+    public IEnumerator startSlideshow()
     {
         //play slideshow
-        //fades in each slide sequentially until slides are done, and waits
+		//fades in each slide sequentially until slides are done, and waits
+		StartCoroutine(fadeEachIn(fadeTime));
         slidesDone = false;
-        StartCoroutine(fadeEachIn(fadeTime));
+        
         while (!slidesDone)
         {
             yield return new WaitForSecondsRealtime(1);
@@ -122,7 +137,7 @@ public class CallSlideshow : MonoBehaviour
             //fade out slides and fade in title at the same time
             StartCoroutine(fadeEachOut(fadeTime));
             StartCoroutine(fadeObjectIn(titleCanvas, fadeTime));
-            yield return new WaitForSecondsRealtime(5); //tweak time as needed
+            yield return new WaitForSecondsRealtime(5); //tweak time as neededs
             //fade out title
             StartCoroutine(fadeObjectOut(titleCanvas, fadeTime));
         }
