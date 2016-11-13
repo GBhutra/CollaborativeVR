@@ -79,7 +79,6 @@ public class StoryEngineScript : MonoBehaviour {
 	//The FSM state variable
 	private Process p;
 	private CallSlideshow cs;
-	private bool runShot = false
 
 	// Use this for initialization
 	void Start () {
