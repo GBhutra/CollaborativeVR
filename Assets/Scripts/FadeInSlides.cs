@@ -3,7 +3,18 @@ using System.Collections;
 
 public class FadeInSlides : MonoBehaviour {
 
+    //------------------------------------------------------------------------------------------------------------------------------------
+    //READ ME!
+    //
     //Shamelessly stolen from http://wiki.unity3d.com/index.php/FadeObjectInOut
+    //Handles fade in and fade out of objects and all their children through manipulating alpha channels.
+    //A copy of this script should be attached to each slide, as it assumes that you are manipulating the children of the attached object.
+    //
+    //Please do not break coroutines!
+    //
+    //Need to work with shaders here maybe to get 3D objects to load properly!
+    //
+    //-------------------------------------------------------------------------------------------------------------------------------------
 
     // publically editable speed
     public float fadeDelay = 0.0f;
