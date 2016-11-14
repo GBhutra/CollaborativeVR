@@ -6,14 +6,14 @@ public class StoryEngineScript : MonoBehaviour {
 	/*
 	 * Shots transition as per the followiwing state machine
 	 * 															|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|
-	 * Start - IntroSlides - CaveIntro - CrossRoads - FindTheBaby - BabyFound - End
+	 * Start - CaveIntro - CrossRoads - FindTheBaby - BabyFound - End
 	 * 											|________________________________|
 	 *
 	 * The entry and exit conditions of individual cases are explained in the main update loop
 	*/
 
-	enum Shot { Start, IntroSlides, CaveIntro, CrossRoads, FindTheBaby, BabyFound, End };
-	enum Command	  { toStart , toNextShot, toEnd };
+	enum Shot { Start, CaveIntro, CrossRoads, FindTheBaby, BabyFound, End };
+	enum Command { toStart , toNextShot, toEnd };
 
 	class Process
 	{
@@ -49,8 +49,7 @@ public class StoryEngineScript : MonoBehaviour {
 			CurrentShot = Shot.Start;
 			transitions = new Dictionary<StateTransition, Shot>
 			{
-				{ new StateTransition(Shot.Start, Command.toNextShot), Shot.IntroSlides },
-				{ new StateTransition(Shot.IntroSlides, Command.toNextShot), Shot.CaveIntro },
+				{ new StateTransition(Shot.Start, Command.toNextShot), Shot.CaveIntro },
 				{ new StateTransition(Shot.CaveIntro, Command.toNextShot), Shot.CrossRoads },
 				{ new StateTransition(Shot.CrossRoads, Command.toNextShot), Shot.FindTheBaby },
 				{ new StateTransition(Shot.FindTheBaby, Command.toNextShot), Shot.BabyFound },
@@ -78,46 +77,45 @@ public class StoryEngineScript : MonoBehaviour {
 
 	//The FSM state variable
 	private Process p;
-	private CallSlideshow cs;
-<<<<<<< HEAD
-=======
-    private bool runShot = false;
->>>>>>> ce447af502f3887cdb08a069285ea20f731fb76d
+
+	//Locations
+	public GameObject caveIntro;
+	public GameObject crossRoads;
+
+
+	public GameObject player1;
+	public GameObject player2;
+
+	public GameObject mother;
+
 
 	// Use this for initialization
 	void Start () {
 		p = new Process();
-		cs = (CallSlideshow)GameObject.Find ("Slideshow Controller").GetComponent (typeof(CallSlideshow));
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		switch (p.CurrentShot) {
 		case Shot.Start:
-			/*
-			 * Entry : Both the players are connected
-			 * Exit : end of the slideshow
-			*/
-			//CallSlideshow cs = (CallSlideshow)GameObject.Find ("Slideshow Controller").GetComponent (typeof(CallSlideshow));
-			if (!cs.midfade && !cs.fadedOut && !cs.sceneComplete) {
-				//extra first step to fade out objects
-				StartCoroutine (cs.fadeEachOut (2.5F));
-			}
-			if (!cs.midfade && !cs.sceneComplete && cs.fadedOut) {
-				//slides initially faded out, can play slides
-				StartCoroutine (cs.startSlideshow ());
-			}
-			if (!cs.midfade && !cs.fadedOut && cs.sceneComplete) {
-				//slideshow and title are done, transition
-				print ("We are ready to leave shot 1");
-			}
-
-			//StartCoroutine (cs.fadeEachOut (2.5F));
-			//if (
-				
-			//CallSlideshow.StartCoroutine(fadeEachOut(fadeTime));
-			//CallSlideshow.
-
+			print (" In the Starting Shot");
+			MotherBehaviourScript m = mother.GetComponent<MotherBehaviourScript> (); 
+			if (!m.isTalking ())
+				m.StartTalking ();
+			p.MoveNext (Command.toNextShot);
+			break;
+		case Shot.CaveIntro:
+			if (5 > (caveIntro.transform.position - mother.transform.position).magnitude) {
+				// Do the Talking and the move to CR
+				print (" In the cave intro Shot");
+			} else if (5 < (crossRoads.transform.position - mother.transform.position).magnitude)
+				p.MoveNext (Command.toNextShot);
+			break;
+		case Shot.CrossRoads:
+			print (" In the cave intro CrossRoad");
+			if (!m.isTalking ())
+				m.StartTalking ();
+			
 			break;
 		}
 	}
