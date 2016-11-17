@@ -96,10 +96,10 @@ public class StoryEngineScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		MotherBehaviourScript m = mother.GetComponent<MotherBehaviourScript> (); 
 		switch (p.CurrentShot) {
 		case Shot.Start:
 			print (" In the Starting Shot");
-			MotherBehaviourScript m = mother.GetComponent<MotherBehaviourScript> (); 
 			if (!m.isTalking ())
 				m.StartTalking ();
 			p.MoveNext (Command.toNextShot);
@@ -108,14 +108,13 @@ public class StoryEngineScript : MonoBehaviour {
 			if (5 > (caveIntro.transform.position - mother.transform.position).magnitude) {
 				// Do the Talking and the move to CR
 				print (" In the cave intro Shot");
-			} else if (5 < (crossRoads.transform.position - mother.transform.position).magnitude)
+			} else if (6 < (crossRoads.transform.position - mother.transform.position).magnitude)
 				p.MoveNext (Command.toNextShot);
 			break;
 		case Shot.CrossRoads:
 			print (" In the cave intro CrossRoad");
 			if (!m.isTalking ())
 				m.StartTalking ();
-			
 			break;
 		}
 	}

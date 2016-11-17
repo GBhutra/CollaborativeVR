@@ -27,7 +27,7 @@ public class GetCameraValues : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(" Is the story ongoing ? : " + b_ongoingStory);
+        //print(" Is the story ongoing ? : " + b_ongoingStory);
         // Angle betwween the target scene and the viewer
         Vector3 localTarget = Camera.main.transform.InverseTransformPoint(target.position);
         //Vector3 localTarget = Camera.main.transform.InverseTransformPoint(target.position);
