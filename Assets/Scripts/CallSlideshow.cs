@@ -22,6 +22,7 @@ public class CallSlideshow : MonoBehaviour
     public GameObject[] slides = new GameObject[3]; //change this number in the Unity Environment. Define slides there as well.
     public float transitionDelay = 10.0f; //minimum time between slide fades; if audio source time is longer, go with that.
     public float fadeTime = 2.5f; //duration of a given fade
+    public float titleTime = 2.5f; //duration to hold title or credits
     public bool hasTitle = true;    //determine whether this is a title or ending sequence
     private bool slidesDone = true;
     public bool fadedOut = false;
@@ -140,7 +141,7 @@ public class CallSlideshow : MonoBehaviour
             StartCoroutine(fadeObjectIn(titleCanvas, fadeTime));
             yield return new WaitForSecondsRealtime(5); //tweak time as neededs
             //fade out title
-            StartCoroutine(fadeObjectOut(titleCanvas, fadeTime));
+            StartCoroutine(fadeObjectOut(titleCanvas, titleTime));
         }
         yield return null;
         //update scene completion status
