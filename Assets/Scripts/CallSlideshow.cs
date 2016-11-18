@@ -22,12 +22,13 @@ public class CallSlideshow : MonoBehaviour
     public GameObject[] slides = new GameObject[3]; //change this number in the Unity Environment. Define slides there as well.
     public float transitionDelay = 10.0f; //minimum time between slide fades; if audio source time is longer, go with that.
     public float fadeTime = 2.5f; //duration of a given fade
+    public float titleTime = 2.5f; //duration to hold title or credits
     public bool hasTitle = true;    //determine whether this is a title or ending sequence
     private bool slidesDone = true;
     public bool fadedOut = false;
     public bool midfade = false;
     public bool sceneComplete = false;
-    private bool isEnding = false;
+    public bool isEnding = false;
     private float audioClipLength = 0.0f;
 
     //Deprecated, but keeping if needed
@@ -140,7 +141,7 @@ public class CallSlideshow : MonoBehaviour
             StartCoroutine(fadeObjectIn(titleCanvas, fadeTime));
             yield return new WaitForSecondsRealtime(5); //tweak time as neededs
             //fade out title
-            StartCoroutine(fadeObjectOut(titleCanvas, fadeTime));
+            StartCoroutine(fadeObjectOut(titleCanvas, titleTime));
         }
         yield return null;
         //update scene completion status
@@ -154,13 +155,20 @@ public class CallSlideshow : MonoBehaviour
         //activate slideCanvas if not active
         slideCanvas.SetActive(true);
         //getSlides();  //get all slides if need be
-        StartCoroutine(startSlideshow());
+        if (!isEnding)
+        {
+            StartCoroutine(startSlideshow());
+        }
+        else
+        {
+            //do a thing
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
+        
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             StartCoroutine(fadeEachOut(fadeTime));
@@ -170,11 +178,15 @@ public class CallSlideshow : MonoBehaviour
             //StartCoroutine(fadeEachIn(fadeTime));
             StartCoroutine(startSlideshow());
         }
-        */
-        if (sceneComplete)
+        
+        if (sceneComplete && !isEnding)
         {
             Application.LoadLevel(Application.loadedLevel + 1);
             //make sure that we don't go too far when using this script for outro.
+        }
+        else if (sceneComplete && isEnding)
+        {
+            //do a thing
         }
     }
 }
