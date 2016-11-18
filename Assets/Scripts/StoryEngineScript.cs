@@ -140,7 +140,7 @@ public class StoryEngineScript : MonoBehaviour {
 		case Shot.CrossRoads:
 			print (" Story : Crossroads or Shot 3 warning timeout: "+warningTimeout + " end timeout: "+endTimeOut);
 			//TODO: Only Checking for player 1 now, to add the coordinates for player 2
-			if (!crossRoadExpl && 5 > (mother.transform.position - player1.transform.position).magnitude && 5==m.getState) {
+			if (!crossRoadExpl && 5 < (mother.transform.position - player1.transform.position).magnitude && 5==m.getState()) {
 				// get the warning timer going. 
 				if (0 < warningTimeout) { 
 					warningTimeout -= Time.deltaTime;
