@@ -79,14 +79,17 @@ public class StoryEngineScript : MonoBehaviour {
 	private Process p;
 
 	//Locations
-	public GameObject caveIntro;
-	public GameObject crossRoads;
+	public GameObject caveIntroZone;
+	public GameObject crossRoadZone;
 
 
 	public GameObject player1;
 	public GameObject player2;
 
 	public GameObject mother;
+
+	private bool caveIntro = false;
+	private bool crossRoadExpl = false;
 
 
 	// Use this for initialization
@@ -99,22 +102,54 @@ public class StoryEngineScript : MonoBehaviour {
 		MotherBehaviourScript m = mother.GetComponent<MotherBehaviourScript> (); 
 		switch (p.CurrentShot) {
 		case Shot.Start:
-			print (" In the Starting Shot");
-			if (!m.isTalking ())
-				m.StartTalking ();
-			p.MoveNext (Command.toNextShot);
+			print (" Story : Start or Shot 1");
+			//getting the mother to the cave Intro Shot
+			float distFromIntro = (caveIntroZone.transform.position - mother.transform.position).magnitude;
+			if (5 > distFromIntro) {
+				print ("Mother ");
+				p.MoveNext (Command.toNextShot);
+			}
+			else {
+				// 1 : indicates that the mother is already moving
+				if (1!=m.getState())
+					m.moveTo (caveIntroZone.transform.position);
+			}
 			break;
 		case Shot.CaveIntro:
-			if (5 > (caveIntro.transform.position - mother.transform.position).magnitude) {
-				// Do the Talking and the move to CR
-				print (" In the cave intro Shot");
-			} else if (6 < (crossRoads.transform.position - mother.transform.position).magnitude)
-				p.MoveNext (Command.toNextShot);
+			print (" Story : Cave Intro or Shot 2 ");
+			// The mother is waiting asking her to introduce the cave
+			if (5 == m.getState() && !caveIntro) {	
+				m.introduceTheCave ();
+				caveIntro = true;
+			}
+			else if (5 == m.getState() && caveIntro) {
+				float distFromCR = (crossRoadZone.transform.position - mother.transform.position).magnitude;
+				if (5 > distFromCR)
+					p.MoveNext (Command.toNextShot);
+				else {
+					// 1 : indicates that the mother is already moving
+					if (1!=m.getState())
+						m.moveTo (crossRoadZone.transform.position);
+				}
+			}
 			break;
 		case Shot.CrossRoads:
-			print (" In the cave intro CrossRoad");
-			if (!m.isTalking ())
-				m.StartTalking ();
+			print (" Story : Crossroads or Shot 3");
+			// The mother is waiting, asking her to explain the cross roads
+			if (5 == m.getState() && !crossRoadExpl) {	
+				m.introduceTheCave ();
+				caveIntro = true;
+			}
+			else if (5 == m.getState() && crossRoadExpl) {
+				float distFromCR = (crossRoadZone.transform.position - mother.transform.position).magnitude;
+				if (5 > distFromCR)
+					p.MoveNext (Command.toNextShot);
+				else {
+					// 1 : indicates that the mother is already moving
+					if (1!=m.getState())
+						m.moveTo (caveIntroZone.transform.position);
+				}
+			}
 			break;
 		}
 	}

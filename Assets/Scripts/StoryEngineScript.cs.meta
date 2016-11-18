@@ -1,10 +1,15 @@
 fileFormatVersion: 2
 guid: 7400aa2152951421399a4561376c08be
-timeCreated: 1479067307
+timeCreated: 1479431419
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - caveIntro: {fileID: 100000, guid: 81154777d5417884981849c5243f6c01, type: 2}
+  - crossRoads: {instanceID: 0}
+  - player1: {instanceID: 0}
+  - player2: {instanceID: 0}
+  - mother: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
