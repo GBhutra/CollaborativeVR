@@ -163,11 +163,14 @@ public class MotherBehaviourScript : MonoBehaviour {
 	}
 
 	public void introduceTheCave()	{
-		print ("Mother: Introducing the Cave");
 		p.MoveNext (Command.toIntroduceCave);
 	}
 
 	public void explainCrossRoads()	{
 		p.MoveNext (Command.toExplainCrossRoads);
+	}
+
+	public void warningCall()	{
+		p.MoveNext (Command.toWarn);
 	}
 }
