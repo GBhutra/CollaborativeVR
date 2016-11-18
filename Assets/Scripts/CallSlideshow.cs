@@ -132,7 +132,7 @@ public class CallSlideshow : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(1);
         }
-        //if this is the title sequence, play title as well
+        //if this is the title or ending sequence, play title as well
         if (hasTitle)
         {
 
