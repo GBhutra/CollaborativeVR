@@ -17,8 +17,8 @@ public class CallSlideshow : MonoBehaviour
     //TO-DO: Set starting alpha of all objects that need to fade in to 0; may be done in FadeInSlides.cs or here
     //-----------------------------------------------------------------------------------------------------------------
 
-    public GameObject slideCanvas;  //what it says; parent object of all slides
-    public GameObject titleCanvas;  //parent object of title, if we have one.
+    //public GameObject slideCanvas;  //what it says; parent object of all slides
+    public GameObject[] titleCanvases = new GameObject[1];  //parent object of title, if we have one.
     public GameObject[] slides = new GameObject[3]; //change this number in the Unity Environment. Define slides there as well.
     public float transitionDelay = 10.0f; //minimum time between slide fades; if audio source time is longer, go with that.
     public float fadeTime = 2.5f; //duration of a given fade
@@ -119,6 +119,19 @@ public class CallSlideshow : MonoBehaviour
         midfade = false;
     }
 
+    public IEnumerator fadeTitlesIn(float ft)
+    {
+        midfade = true;
+        foreach (GameObject page in titleCanvases)
+        {
+            StartCoroutine(fadeObjectIn(page, ft));
+            yield return new WaitForSecondsRealtime(5);
+            StartCoroutine(fadeObjectOut(page, titleTime));
+            //yield return new WaitForSecondsRealtime(5);
+        }
+        midfade = false;
+    }
+
     //play slideshow and audio, show title, then fade all three.
     public IEnumerator startSlideshow()
     {
@@ -135,13 +148,19 @@ public class CallSlideshow : MonoBehaviour
         //if this is the title or ending sequence, play title as well
         if (hasTitle)
         {
-
+            
             //fade out slides and fade in title at the same time
             StartCoroutine(fadeEachOut(fadeTime));
+            StartCoroutine(fadeTitlesIn(fadeTime));
+            yield return new WaitForSecondsRealtime(5);
+            
+            /*
             StartCoroutine(fadeObjectIn(titleCanvas, fadeTime));
             yield return new WaitForSecondsRealtime(5); //tweak time as neededs
-            //fade out title
-            StartCoroutine(fadeObjectOut(titleCanvas, titleTime));
+            */
+            //fade out titles
+            StartCoroutine(fadeObjectOut(titleCanvases[titleCanvases.Length-1], titleTime));
+            
         }
         yield return null;
         //update scene completion status
@@ -153,7 +172,7 @@ public class CallSlideshow : MonoBehaviour
     void Start()
     {
         //activate slideCanvas if not active
-        slideCanvas.SetActive(true);
+        //slideCanvas.SetActive(true);
         //getSlides();  //get all slides if need be
         if (!isEnding)
         {
