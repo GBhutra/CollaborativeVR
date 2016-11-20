@@ -74,6 +74,7 @@ public class CallSlideshow : MonoBehaviour
     {
         go.SetActive(true);
         FadeInSlides fil = (FadeInSlides)go.GetComponent(typeof(FadeInSlides));
+        //fil.FadeIn(fadeTime);
         fil.FadeIn(fadeTime);
         yield return null;
     }
@@ -125,7 +126,7 @@ public class CallSlideshow : MonoBehaviour
         foreach (GameObject page in titleCanvases)
         {
             StartCoroutine(fadeObjectIn(page, ft));
-            yield return new WaitForSecondsRealtime(5);
+            yield return new WaitForSecondsRealtime(7);
             StartCoroutine(fadeObjectOut(page, titleTime));
             //yield return new WaitForSecondsRealtime(5);
         }
