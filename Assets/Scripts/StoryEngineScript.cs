@@ -86,7 +86,23 @@ public class StoryEngineScript : MonoBehaviour {
 	public GameObject player1;
 	public GameObject player2;
 
+	// This is a reference to the mother object
 	public GameObject mother;
+	//An enumeration of the mother speeches 
+	enum motherAudio { 
+		Bad1=0, 
+		Bad2=1, 
+		Bad3=2,
+		Intro=3,
+		Timeout1,
+		CrossRoads,
+		Timeout2,
+		BabyFound,
+		Monster,
+		ReUnite1,
+		ReUnite2,
+		ReUnite3
+	};
 
 	private bool caveIntro = false;
 	private bool crossRoadExpl = false;
@@ -123,7 +139,7 @@ public class StoryEngineScript : MonoBehaviour {
 			// The mother is waiting asking her to introduce the cave
 			if (5 == m.getState() && !caveIntro) {	
 				//StartCoroutine(m.introduceTheCave ());
-				m.introduceTheCave ();
+				m.startTalking ((int)motherAudio.Intro);
 				caveIntro = true;
 			}
 			else if (5 == m.getState() && caveIntro) {
@@ -146,7 +162,7 @@ public class StoryEngineScript : MonoBehaviour {
 					warningTimeout -= Time.deltaTime;
 					if (0 > warningTimeout)
 						//warningCall(int w) : w=1 => intro Warning and w=2 => crossroads Warning
-						m.warningCall (1);
+						m.startTalking ((int)motherAudio.Timeout1);
 					}
 				//stubborn players still havent moved !! getting the end timer going. 
 				else {
@@ -158,7 +174,7 @@ public class StoryEngineScript : MonoBehaviour {
 			// Players are close to the mother. Explain the cross roads.
 			else {
 				if (5 == m.getState () && !crossRoadExpl) {
-					m.explainCrossRoads ();
+					m.startTalking ((int)motherAudio.CrossRoads);
 					crossRoadExpl = true;
 				}
 				else if (5 == m.getState () && !crossRoadExpl) {
@@ -168,6 +184,7 @@ public class StoryEngineScript : MonoBehaviour {
 			break;
 		case Shot.End:
 			print ("End of the Story !!");
+			Application.LoadLevel(Application.loadedLevel + 1);
 			break;
 		}
 	}

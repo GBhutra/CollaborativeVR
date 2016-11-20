@@ -201,6 +201,9 @@ public class CallSlideshow : MonoBehaviour
         
         if (sceneComplete && !isEnding)
         {
+			//GameObject endingType = new GameObject ();
+			//endingType.name = "goodEnd";
+			//DontDestroyOnLoad (endingType);
             Application.LoadLevel(Application.loadedLevel + 1);
             //make sure that we don't go too far when using this script for outro.
         }

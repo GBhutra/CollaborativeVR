@@ -13,8 +13,8 @@ public class MotherBehaviourScript : MonoBehaviour {
 	 * End : Based on the baby found or not
 	*/
 
-	enum ProcessState { Start=0, Walking=1, CaveIntro=2, CrossRoads=3 ,Warning=4, Waiting=5, End=6 	};
-	enum Command	  { toWalk , toWait, toIntroduceCave, toExplainCrossRoads, toWarn, toEnd };
+	enum ProcessState { Start=0, Walking=1, Talking=2, Waiting=5, End=6 	};
+	enum Command	  { toWalk , toWait, toTalk, toEnd };
 
 	class Process
 	{
@@ -52,12 +52,8 @@ public class MotherBehaviourScript : MonoBehaviour {
 			{
 				{ new StateTransition(ProcessState.Start, Command.toWait), ProcessState.Waiting },
 				{ new StateTransition(ProcessState.Walking, Command.toWait), ProcessState.Waiting },
-				{ new StateTransition(ProcessState.Waiting, Command.toIntroduceCave), ProcessState.CaveIntro },
-				{ new StateTransition(ProcessState.Waiting, Command.toExplainCrossRoads), ProcessState.CrossRoads },
-				{ new StateTransition(ProcessState.Waiting, Command.toWarn), ProcessState.Warning },
-				{ new StateTransition(ProcessState.CaveIntro, Command.toWait), ProcessState.Waiting },
-				{ new StateTransition(ProcessState.CrossRoads, Command.toWait), ProcessState.Waiting },
-				{ new StateTransition(ProcessState.Warning, Command.toWait), ProcessState.Waiting },
+				{ new StateTransition(ProcessState.Waiting, Command.toTalk), ProcessState.Talking },
+				{ new StateTransition(ProcessState.Talking, Command.toWait), ProcessState.Waiting },
 				{ new StateTransition(ProcessState.Waiting, Command.toWalk), ProcessState.Walking }
 
 			};
@@ -86,29 +82,13 @@ public class MotherBehaviourScript : MonoBehaviour {
 	// audioFiles :  this is an array of audio Files
 	private AudioSource audioSrc;
 	public AudioClip[] audioFiles;
-	enum motherAudio { 
-		Bad1=0, 
-		Bad2=1, 
-		Bad3=2,
-		Intro=3,
-		Timeout1,
-		CrossRoads,
-		Timeout2,
-		BabyFound,
-		Monster,
-		ReUnite1,
-		ReUnite2,
-		ReUnite3
-	};
 
 	//This variable has the destination to which the mother has to go when she is in the walking state
 	private Vector3 dest;
 	float speed = 0.001f;
 
 	//Temp variable	
-	float timerForCaveIntro = 7.0f;
-	float timerForCrossRoads = 15.0f;
-	float timerForWarningCall = 5.0f;
+	float talkingTimer = 5.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -137,32 +117,13 @@ public class MotherBehaviourScript : MonoBehaviour {
 				transform.position += diff * speed;
 			}
 			break;
-		case ProcessState.CaveIntro:
-			print("Mother : CaveIntro time Left: "+timerForCaveIntro);
+		case ProcessState.Talking:
+			print("Mother : CaveIntro time Left: "+talkingTimer);
 			//TODO: Play the audio for on cave intro and move the state to wait
 			// temporarily wait for a timeout
-			timerForCaveIntro -= Time.deltaTime;
-			if (0 > timerForCaveIntro) {
-				timerForCaveIntro = 7.0f;
-				p.MoveNext (Command.toWait);
-			}
-			break;
-		case ProcessState.CrossRoads:
-			print("Mother : CrossRoads time Left: "+timerForCrossRoads);
-			//TODO: Play the audio for on crossRoads and move the state to wait
-			// temporarily wait for a timeout
-			timerForCrossRoads -= Time.deltaTime;
-			if (0 > timerForCrossRoads) {
-				timerForCrossRoads = 15.0f;
-				p.MoveNext (Command.toWait);
-			}
-			break;
-		case ProcessState.Warning:
-			print("Mother : timerForWarningCall time Left: "+timerForWarningCall);
-			//TODO: Play the audio for on crossRoads and move the state to wait
-			// temporarily wait for a timeout
-			timerForWarningCall -= Time.deltaTime;
-			if (0 > timerForWarningCall) {
+			talkingTimer -= Time.deltaTime;
+			if (0 > talkingTimer) {
+				talkingTimer = 7.0f;
 				p.MoveNext (Command.toWait);
 			}
 			break;
@@ -179,32 +140,11 @@ public class MotherBehaviourScript : MonoBehaviour {
 		dest = location;
 		p.MoveNext (Command.toWalk);
 	}
-		
-	public void introduceTheCave()	{
-		audioSrc.clip = audioFiles [(int)motherAudio.Intro];
-		audioSrc.Play();
-		timerForCaveIntro = audioSrc.clip.length;
-		p.MoveNext (Command.toIntroduceCave);
-	}
-		
-	public void explainCrossRoads()	{
-		audioSrc.clip = audioFiles [(int)motherAudio.CrossRoads];
-		audioSrc.Play();
-		timerForCrossRoads = audioSrc.clip.length;
-		p.MoveNext (Command.toExplainCrossRoads);
-	}
 
-	public void warningCall(int i)	{
-		if (1 == i) {
-			audioSrc.clip = audioFiles [(int)motherAudio.Timeout1];
-			audioSrc.Play();
-			timerForWarningCall = audioSrc.clip.length;
-		}
-		if (2 == i) {
-			audioSrc.clip = audioFiles [(int)motherAudio.Timeout2];
-			audioSrc.Play();
-			timerForWarningCall = audioSrc.clip.length;
-		}
-		p.MoveNext (Command.toWarn);
+	public void startTalking(int speech)	{
+		audioSrc.clip = audioFiles [speech];
+		audioSrc.Play();
+		talkingTimer = audioSrc.clip.length;
+		p.MoveNext (Command.toTalk);
 	}
 }
