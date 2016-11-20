@@ -110,7 +110,6 @@ public class StoryEngineScript : MonoBehaviour {
 			//getting the mother to the cave Intro Shot
 			float distFromIntro = (caveIntroZone.transform.position - mother.transform.position).magnitude;
 			if (5 > distFromIntro) {
-				print ("Mother ");
 				p.MoveNext (Command.toNextShot);
 			}
 			else {
@@ -123,6 +122,7 @@ public class StoryEngineScript : MonoBehaviour {
 			print (" Story : Cave Intro or Shot 2 ");
 			// The mother is waiting asking her to introduce the cave
 			if (5 == m.getState() && !caveIntro) {	
+				//StartCoroutine(m.introduceTheCave ());
 				m.introduceTheCave ();
 				caveIntro = true;
 			}
@@ -145,7 +145,8 @@ public class StoryEngineScript : MonoBehaviour {
 				if (0 < warningTimeout) { 
 					warningTimeout -= Time.deltaTime;
 					if (0 > warningTimeout)
-						m.warningCall ();
+						//warningCall(int w) : w=1 => intro Warning and w=2 => crossroads Warning
+						m.warningCall (1);
 					}
 				//stubborn players still havent moved !! getting the end timer going. 
 				else {

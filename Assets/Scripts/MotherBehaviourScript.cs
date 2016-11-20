@@ -54,6 +54,7 @@ public class MotherBehaviourScript : MonoBehaviour {
 				{ new StateTransition(ProcessState.Walking, Command.toWait), ProcessState.Waiting },
 				{ new StateTransition(ProcessState.Waiting, Command.toIntroduceCave), ProcessState.CaveIntro },
 				{ new StateTransition(ProcessState.Waiting, Command.toExplainCrossRoads), ProcessState.CrossRoads },
+				{ new StateTransition(ProcessState.Waiting, Command.toWarn), ProcessState.Warning },
 				{ new StateTransition(ProcessState.CaveIntro, Command.toWait), ProcessState.Waiting },
 				{ new StateTransition(ProcessState.CrossRoads, Command.toWait), ProcessState.Waiting },
 				{ new StateTransition(ProcessState.Warning, Command.toWait), ProcessState.Waiting },
@@ -81,6 +82,25 @@ public class MotherBehaviourScript : MonoBehaviour {
 	//The variable which gives information on the mothers state
 	private Process p;
 
+
+	// audioFiles :  this is an array of audio Files
+	private AudioSource audioSrc;
+	public AudioClip[] audioFiles;
+	enum motherAudio { 
+		Bad1=0, 
+		Bad2=1, 
+		Bad3=2,
+		Intro=3,
+		Timeout1,
+		CrossRoads,
+		Timeout2,
+		BabyFound,
+		Monster,
+		ReUnite1,
+		ReUnite2,
+		ReUnite3
+	};
+
 	//This variable has the destination to which the mother has to go when she is in the walking state
 	private Vector3 dest;
 	float speed = 0.001f;
@@ -93,9 +113,9 @@ public class MotherBehaviourScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		p = new Process ();
+		audioSrc = transform.GetComponent<AudioSource>();
 	}
-
-
+		
 	void Update () {
 		switch (p.CurrentState) {
 
@@ -143,7 +163,6 @@ public class MotherBehaviourScript : MonoBehaviour {
 			// temporarily wait for a timeout
 			timerForWarningCall -= Time.deltaTime;
 			if (0 > timerForWarningCall) {
-				timerForWarningCall = 5.0f;
 				p.MoveNext (Command.toWait);
 			}
 			break;
@@ -157,20 +176,35 @@ public class MotherBehaviourScript : MonoBehaviour {
 
 	//This method is invoked by the story engine and makes the mother to move from to a certain location
 	public void moveTo(Vector3 location)	{
-		print ("Moving the mother to diff location !");
 		dest = location;
 		p.MoveNext (Command.toWalk);
 	}
-
+		
 	public void introduceTheCave()	{
+		audioSrc.clip = audioFiles [(int)motherAudio.Intro];
+		audioSrc.Play();
+		timerForCaveIntro = audioSrc.clip.length;
 		p.MoveNext (Command.toIntroduceCave);
 	}
-
+		
 	public void explainCrossRoads()	{
+		audioSrc.clip = audioFiles [(int)motherAudio.CrossRoads];
+		audioSrc.Play();
+		timerForCrossRoads = audioSrc.clip.length;
 		p.MoveNext (Command.toExplainCrossRoads);
 	}
 
-	public void warningCall()	{
+	public void warningCall(int i)	{
+		if (1 == i) {
+			audioSrc.clip = audioFiles [(int)motherAudio.Timeout1];
+			audioSrc.Play();
+			timerForWarningCall = audioSrc.clip.length;
+		}
+		if (2 == i) {
+			audioSrc.clip = audioFiles [(int)motherAudio.Timeout2];
+			audioSrc.Play();
+			timerForWarningCall = audioSrc.clip.length;
+		}
 		p.MoveNext (Command.toWarn);
 	}
 }
