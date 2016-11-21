@@ -30,7 +30,7 @@ public class CallSlideshow : MonoBehaviour
     public bool sceneComplete = false;
     public bool isEnding = false;
     private float audioClipLength = 0.0f;
-    private int fadedSlides = 0;
+    //private int fadedSlides = 0;
 
     //Deprecated, but keeping if needed
     /*
@@ -67,7 +67,7 @@ public class CallSlideshow : MonoBehaviour
         FadeInSlides fil = (FadeInSlides)go.GetComponent(typeof(FadeInSlides));
         fil.FadeOut(fadeTime);
         //yield return new WaitForSecondsRealtime(10);
-        fadedSlides++;
+        //fadedSlides++;
         yield return null;
     }
 
@@ -151,19 +151,19 @@ public class CallSlideshow : MonoBehaviour
         //if this is the title or ending sequence, play title as well
         if (hasTitle)
         {
-            
+
             //fade out slides and fade in title at the same time
             StartCoroutine(fadeEachOut(fadeTime));
             StartCoroutine(fadeTitlesIn(fadeTime));
             yield return new WaitForSecondsRealtime(5);
-            
+
             /*
             StartCoroutine(fadeObjectIn(titleCanvas, fadeTime));
             yield return new WaitForSecondsRealtime(5); //tweak time as neededs
             */
             //fade out titles
-            StartCoroutine(fadeObjectOut(titleCanvases[titleCanvases.Length-1], titleTime));
-            
+            StartCoroutine(fadeObjectOut(titleCanvases[titleCanvases.Length - 1], titleTime));
+
         }
         yield return null;
         //update scene completion status
@@ -183,7 +183,7 @@ public class CallSlideshow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             StartCoroutine(fadeEachOut(fadeTime));
@@ -193,13 +193,13 @@ public class CallSlideshow : MonoBehaviour
             //StartCoroutine(fadeEachIn(fadeTime));
             StartCoroutine(startSlideshow());
         }
-        
+
         if (sceneComplete && !isEnding)
         {
-			//GameObject endingType = new GameObject ();
-			//endingType.name = "goodEnd";
-			//DontDestroyOnLoad (endingType);
-            Application.LoadLevel(Application.loadedLevel + 1);
+            //GameObject endingType = new GameObject ();
+            //endingType.name = "goodEnd";
+            //DontDestroyOnLoad (endingType);
+            //Application.LoadLevel(Application.loadedLevel + 1);
             //make sure that we don't go too far when using this script for outro.
         }
         else if (sceneComplete && isEnding)
