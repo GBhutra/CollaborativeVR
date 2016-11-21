@@ -78,13 +78,13 @@ public class StoryEngineScript : MonoBehaviour {
 	//The FSM state variable
 	private Process p;
 
-	//Locations
-	public GameObject caveIntroZone;
+    //Players
+    private GameObject player1;
+    private GameObject player2;
+
+    //Locations
+    public GameObject caveIntroZone;
 	public GameObject crossRoadZone;
-
-
-	public GameObject player1;
-	public GameObject player2;
 
 	// This is a reference to the mother object
 	public GameObject mother;
@@ -126,8 +126,14 @@ public class StoryEngineScript : MonoBehaviour {
 			print (" Story : Start or Shot 1");
 			//getting the mother to the cave Intro Shot
 			float distFromIntro = (caveIntroZone.transform.position - mother.transform.position).magnitude;
-			if (5 > distFromIntro) {
-				p.MoveNext (Command.toNextShot);
+                if (5 > distFromIntro)
+                {
+                    player1 = GameObject.FindWithTag("FirstPlayer");
+                    player2 = GameObject.FindWithTag("SecondPlayer");
+                    if (null != player1 && null != player2)
+                    {
+                        p.MoveNext(Command.toNextShot);
+                    }
 			}
 			else {
 				// 1 : indicates that the mother is already moving
@@ -136,7 +142,7 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CaveIntro:
-			print (" Story : Cave Intro or Shot 2 ");
+			print (" Story : Cave Intro or Shot 2 ");   
 			// The mother is waiting asking her to introduce the cave
 			if (5 == m.getState() && !caveIntro) {	
 				//StartCoroutine(m.introduceTheCave ());
@@ -155,37 +161,48 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CrossRoads:
-			player1 = GameObject.FindGameObjectsWithTag("FirstPlayer");
-			player2 = GameObject.FindGameObjectsWithTag("SecondPlayer");
-			print (" Story : Crossroads or Shot 3 warning timeout: "+warningTimeout + " end timeout: "+endTimeOut);
-			//TODO: Only Checking for player 1 now, to add the coordinates for player 2
-			if (!crossRoadExpl && 5 < (mother.transform.position - player1.transform.position).magnitude && 5==m.getState()) {
-				// get the warning timer going. 
-				if (0 < warningTimeout) { 
-					warningTimeout -= Time.deltaTime;
-					if (0 > warningTimeout)
-						//warningCall(int w) : w=1 => intro Warning and w=2 => crossroads Warning
-						m.startTalking ((int)motherAudio.Timeout1);
-					}
-				//stubborn players still havent moved !! getting the end timer going. 
-				else {
-					endTimeOut -= Time.deltaTime;
-					if (0 > endTimeOut) {
-						end = false;
-						p.MoveNext (Command.toEnd);
-					}
-				}
-			} 
-			// Players are close to the mother. Explain the cross roads.
-			else {
-				if (5 == m.getState () && !crossRoadExpl) {
-					m.startTalking ((int)motherAudio.CrossRoads);
-					crossRoadExpl = true;
-				}
-				else if (5 == m.getState () && !crossRoadExpl) {
-					// Move the mother to aonther location
-				}
-			}
+            player1 = GameObject.FindWithTag("FirstPlayer");
+            player2 = GameObject.FindWithTag("SecondPlayer");
+            if (null!= player1 && null!= player2)
+                {
+                    print(" Story : Crossroads or Shot 3 warning timeout: " + warningTimeout + " end timeout: " + endTimeOut);
+                    //TODO: Only Checking for player 1 now, to add the coordinates for player 2 -> DONE
+                    if (!crossRoadExpl && 5 < (mother.transform.position - player1.transform.position).magnitude 
+                        && 5 < (mother.transform.position - player2.transform.position).magnitude && 5 == m.getState())
+                    {
+                        // get the warning timer going. 
+                        if (0 < warningTimeout)
+                        {
+                            warningTimeout -= Time.deltaTime;
+                            if (0 > warningTimeout)
+                                //warningCall(int w) : w=1 => intro Warning and w=2 => crossroads Warning
+                                m.startTalking((int)motherAudio.Timeout1);
+                        }
+                        //stubborn players still havent moved !! getting the end timer going. 
+                        else
+                        {
+                            endTimeOut -= Time.deltaTime;
+                            if (0 > endTimeOut)
+                            {
+                                end = false;
+                                p.MoveNext(Command.toEnd);
+                            }
+                        }
+                    }
+                    // Players are close to the mother. Explain the cross roads.
+                    else
+                    {
+                        if (5 == m.getState() && !crossRoadExpl)
+                        {
+                            m.startTalking((int)motherAudio.CrossRoads);
+                            crossRoadExpl = true;
+                        }
+                        else if (5 == m.getState() && !crossRoadExpl)
+                        {
+                            // Move the mother to aonther location
+                        }
+                    }
+                }
 			break;
 		case Shot.End:
 			print ("End of the Story !!");

@@ -78,7 +78,6 @@ public class MotherBehaviourScript : MonoBehaviour {
 	//The variable which gives information on the mothers state
 	private Process p;
 
-
 	// audioFiles :  this is an array of audio Files
 	private AudioSource audioSrc;
 	public AudioClip[] audioFiles;
@@ -124,7 +123,13 @@ public class MotherBehaviourScript : MonoBehaviour {
 			talkingTimer -= Time.deltaTime;
 			if (0 > talkingTimer) {
 				talkingTimer = 7.0f;
-				p.MoveNext (Command.toWait);
+                GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+                GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+                GetCameraValues g1 = player1.GetComponent<GetCameraValues>();
+                GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
+                g1.setStoryMode(false);
+                g2.setStoryMode(false );
+                    p.MoveNext (Command.toWait);
 			}
 			break;
 		}
@@ -142,9 +147,18 @@ public class MotherBehaviourScript : MonoBehaviour {
 	}
 
 	public void startTalking(int speech)	{
-		audioSrc.clip = audioFiles [speech];
-		audioSrc.Play();
-		talkingTimer = audioSrc.clip.length;
-		p.MoveNext (Command.toTalk);
+        GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+        GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+        if (null!=player1 && null != player2)
+        {
+            GetCameraValues g1 = player1.GetComponent<GetCameraValues>();
+            GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
+            g1.setStoryMode(true);
+            g2.setStoryMode(true);
+            audioSrc.clip = audioFiles[speech];
+            audioSrc.Play();
+            talkingTimer = audioSrc.clip.length;
+            p.MoveNext(Command.toTalk);
+        }
 	}
 }

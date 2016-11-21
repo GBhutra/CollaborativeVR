@@ -6,8 +6,7 @@ using System.Collections;
 public class GetCameraValues : MonoBehaviour
 {
     enum RotationMode { Distrator, GuidedRotation, SnapToTarget, Free };
-    RotationMode selectedMode = RotationMode.Distrator;
-    public Transform player;
+    RotationMode selectedMode = RotationMode.GuidedRotation;
     public Transform target;
     public GameObject distractor;
     //public Camera cam = Camera.main;
@@ -17,11 +16,14 @@ public class GetCameraValues : MonoBehaviour
     //This is a trigger for the distractions to start or stop
     bool b_ongoingStory = false;
 
-    // Use this for initialization
+    // Use this for initialization  
     void Start()
     {
-        //target = GameObject.Find("Rock2").transform;
-        //player = GameObject.Find("FirstPersonCharacter").transform;
+        target = GameObject.Find("Mother").transform;
+        if ("FirstPlayer" == gameObject.tag)    
+            distractor = GameObject.Find("fireflyPlayer1");
+        else if ("SecondPlayer" == gameObject.tag)
+            distractor = GameObject.Find("fireflyPlayer2");
     }
 
     // Update is called once per frame
@@ -92,11 +94,11 @@ public class GetCameraValues : MonoBehaviour
             {
                 if (targetAngle > 0)
                 {
-                    player.transform.Rotate(Vector3.up, rotationRate);
+                    transform.Rotate(Vector3.up, rotationRate);
                 }
                 else
                 {
-                    player.transform.Rotate(Vector3.up, rotationRate * (-1));
+                    transform.Rotate(Vector3.up, rotationRate * (-1));
                 }
             }
             else
@@ -110,7 +112,7 @@ public class GetCameraValues : MonoBehaviour
     void SnapToTargetFunction(float targetAngle)
     {
         //TODO : Add a fade in fade out sequence
-        player.transform.Rotate(Vector3.up, targetAngle);
+        transform.Rotate(Vector3.up, targetAngle);
     }
 
     // Visual distractor based Redirection
@@ -127,6 +129,11 @@ public class GetCameraValues : MonoBehaviour
         {
             distractor.SetActive(false);
         }
+    }
+
+    public void setStoryMode(bool val)
+    {
+        b_ongoingStory = val;
     }
 
 }
