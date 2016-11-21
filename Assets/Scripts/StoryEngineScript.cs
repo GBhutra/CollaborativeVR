@@ -161,7 +161,6 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CrossRoads:
-<<<<<<< HEAD
             player1 = GameObject.FindWithTag("FirstPlayer");
             player2 = GameObject.FindWithTag("SecondPlayer");
             if (null!= player1 && null!= player2)
@@ -204,7 +203,6 @@ public class StoryEngineScript : MonoBehaviour {
                         }
                     }
                 }
-=======
 			player1 = GameObject.FindWithTag("FirstPlayer");
 			player2 = GameObject.FindWithTag("SecondPlayer");
 			print (" Story : Crossroads or Shot 3 warning timeout: "+warningTimeout + " end timeout: "+endTimeOut);
@@ -236,7 +234,6 @@ public class StoryEngineScript : MonoBehaviour {
 					// Move the mother to aonther location
 				}
 			}
->>>>>>> origin/Decide-Proper-Outro
 			break;
 		case Shot.End:
 			print ("End of the Story !!");
