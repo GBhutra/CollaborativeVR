@@ -30,6 +30,7 @@ public class CallSlideshow : MonoBehaviour
     public bool sceneComplete = false;
     public bool isEnding = false;
     private float audioClipLength = 0.0f;
+    private int fadedSlides = 0;
 
     //Deprecated, but keeping if needed
     /*
@@ -66,6 +67,7 @@ public class CallSlideshow : MonoBehaviour
         FadeInSlides fil = (FadeInSlides)go.GetComponent(typeof(FadeInSlides));
         fil.FadeOut(fadeTime);
         //yield return new WaitForSecondsRealtime(10);
+        fadedSlides++;
         yield return null;
     }
 
@@ -202,8 +204,10 @@ public class CallSlideshow : MonoBehaviour
         }
         else if (sceneComplete && isEnding)
         {
+            //trying to play credits
+            //if (fadedSlides > slides.Length + titleCanvases.Length)
             //credits done, quit
-            Application.Quit();
+            //Application.Quit();
         }
     }
 }
