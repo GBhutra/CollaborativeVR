@@ -175,14 +175,7 @@ public class CallSlideshow : MonoBehaviour
         //activate slideCanvas if not active
         //slideCanvas.SetActive(true);
         //getSlides();  //get all slides if need be
-        if (!isEnding)
-        {
-            StartCoroutine(startSlideshow());
-        }
-        else
-        {
-            //do a thing
-        }
+        StartCoroutine(startSlideshow());
     }
 
     // Update is called once per frame
@@ -209,7 +202,8 @@ public class CallSlideshow : MonoBehaviour
         }
         else if (sceneComplete && isEnding)
         {
-            //do a thing
+            //credits done, quit
+            Application.Quit();
         }
     }
 }
