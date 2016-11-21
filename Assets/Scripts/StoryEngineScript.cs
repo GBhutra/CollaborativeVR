@@ -106,6 +106,7 @@ public class StoryEngineScript : MonoBehaviour {
 
 	private bool caveIntro = false;
 	private bool crossRoadExpl = false;
+	private bool end = false;
 
 	// This is the timeout for the warning call
 	float warningTimeout = 10.0f;
@@ -154,6 +155,8 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CrossRoads:
+			player1 = GameObject.FindGameObjectsWithTag("FirstPlayer");
+			player2 = GameObject.FindGameObjectsWithTag("SecondPlayer");
 			print (" Story : Crossroads or Shot 3 warning timeout: "+warningTimeout + " end timeout: "+endTimeOut);
 			//TODO: Only Checking for player 1 now, to add the coordinates for player 2
 			if (!crossRoadExpl && 5 < (mother.transform.position - player1.transform.position).magnitude && 5==m.getState()) {
@@ -167,8 +170,10 @@ public class StoryEngineScript : MonoBehaviour {
 				//stubborn players still havent moved !! getting the end timer going. 
 				else {
 					endTimeOut -= Time.deltaTime;
-					if (0 > endTimeOut)
+					if (0 > endTimeOut) {
+						end = false;
 						p.MoveNext (Command.toEnd);
+					}
 				}
 			} 
 			// Players are close to the mother. Explain the cross roads.
@@ -184,6 +189,12 @@ public class StoryEngineScript : MonoBehaviour {
 			break;
 		case Shot.End:
 			print ("End of the Story !!");
+			GameObject endingType = new GameObject ();
+			if (end)
+				endingType.name = "goodEnd";
+			else
+				endingType.name = "badEnd";
+			DontDestroyOnLoad (endingType);
 			Application.LoadLevel(Application.loadedLevel + 1);
 			break;
 		}
