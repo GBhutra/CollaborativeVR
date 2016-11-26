@@ -135,5 +135,4 @@ public class GetCameraValues : MonoBehaviour
     {
         b_ongoingStory = val;
     }
-
 }

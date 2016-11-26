@@ -81,10 +81,10 @@ public class MotherBehaviourScript : MonoBehaviour {
 	// audioFiles :  this is an array of audio Files
 	private AudioSource audioSrc;
 	public AudioClip[] audioFiles;
+	NavMeshAgent naviAgent;
 
 	//This variable has the destination to which the mother has to go when she is in the walking state
 	private Vector3 dest;
-	float speed = 0.001f;
 
 	//Temp variable	
 	float talkingTimer = 5.0f;
@@ -93,8 +93,10 @@ public class MotherBehaviourScript : MonoBehaviour {
 	void Start () {
 		p = new Process ();
 		audioSrc = transform.GetComponent<AudioSource>();
+		naviAgent = transform.GetComponent<NavMeshAgent> ();
+		naviAgent.Stop ();
 	}
-		
+
 	void Update () {
 		switch (p.CurrentState) {
 
@@ -103,17 +105,16 @@ public class MotherBehaviourScript : MonoBehaviour {
 			p.MoveNext (Command.toWait);
 			break;
 		case ProcessState.Walking:
-			print("Mother : Walking");
-			float dist = (dest - transform.position).magnitude;
-
-			if (5 > dist)	{ // destination is reached 
+			print("Mother : Walking Dist: " + naviAgent.remainingDistance );
+			if (3 > naviAgent.remainingDistance)	{ // destination is reached 
+				naviAgent.Stop();
 				//Wait for the storyEngine to decide what to do nextß
 				p.MoveNext(Command.toWait);
 			}
 			// Move towards the dest
 			else {
-				Vector3 diff = dest - transform.position;
-				transform.position += diff * speed;
+				//Vector3 diff = dest - transform.position;
+				//transform.position += diff * speed;
 			}
 			break;
 		case ProcessState.Talking:
@@ -122,14 +123,13 @@ public class MotherBehaviourScript : MonoBehaviour {
 			// temporarily wait for a timeout
 			talkingTimer -= Time.deltaTime;
 			if (0 > talkingTimer) {
-				talkingTimer = 7.0f;
-                GameObject player1 = GameObject.FindWithTag("FirstPlayer");
-                GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-                GetCameraValues g1 = player1.GetComponent<GetCameraValues>();
-                GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
-                g1.setStoryMode(false);
-                g2.setStoryMode(false );
-                    p.MoveNext (Command.toWait);
+				//GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+				//GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+				//GetCameraValues g1 = player1.GetComponent<GetCameraValues>();
+				//GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
+				//g1.setStoryMode(false);
+				//g2.setStoryMode(false );
+				p.MoveNext (Command.toWait);
 			}
 			break;
 		}
@@ -142,23 +142,28 @@ public class MotherBehaviourScript : MonoBehaviour {
 
 	//This method is invoked by the story engine and makes the mother to move from to a certain location
 	public void moveTo(Vector3 location)	{
-		dest = location;
+		//dest = location;
 		p.MoveNext (Command.toWalk);
+		naviAgent.SetDestination(location);
+		naviAgent.Resume ();
 	}
 
 	public void startTalking(int speech)	{
-        GameObject player1 = GameObject.FindWithTag("FirstPlayer");
-        GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-        if (null!=player1 && null != player2)
-        {
-            GetCameraValues g1 = player1.GetComponent<GetCameraValues>();
-            GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
-            g1.setStoryMode(true);
-            g2.setStoryMode(true);
-            audioSrc.clip = audioFiles[speech];
-            audioSrc.Play();
-            talkingTimer = audioSrc.clip.length;
-            p.MoveNext(Command.toTalk);
-        }
+		GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+		//GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+		if (null!=player1)// && null != player2)
+		{
+			if (3 == speech || 5 == speech) 
+			{
+				PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+				//PlayersBehaviourScript g2 = player2.GetComponent<PlayersBehaviourScript>();
+				p1.setStoryMode(true);
+				//g2.setStoryMode(true);
+			}
+			p.MoveNext(Command.toTalk);
+			audioSrc.clip = audioFiles[speech];
+			audioSrc.Play();
+			talkingTimer = audioSrc.clip.length;
+		}
 	}
 }
