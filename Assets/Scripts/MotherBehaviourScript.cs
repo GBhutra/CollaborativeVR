@@ -123,13 +123,14 @@ public class MotherBehaviourScript : MonoBehaviour {
 			// temporarily wait for a timeout
 			talkingTimer -= Time.deltaTime;
 			if (0 > talkingTimer) {
-				//GameObject player1 = GameObject.FindWithTag("FirstPlayer");
-				//GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-				//GetCameraValues g1 = player1.GetComponent<GetCameraValues>();
-				//GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
-				//g1.setStoryMode(false);
-				//g2.setStoryMode(false );
-				p.MoveNext (Command.toWait);
+				GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+                //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+                PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+                p1.setStoryMode(false);
+                //GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
+                //g1.setStoryMode(false);
+                //g2.setStoryMode(false );
+                p.MoveNext (Command.toWait);
 			}
 			break;
 		}
@@ -156,7 +157,7 @@ public class MotherBehaviourScript : MonoBehaviour {
 			if (3 == speech || 5 == speech) 
 			{
 				PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-				//PlayersBehaviourScript g2 = player2.GetComponent<PlayersBehaviourScript>();
+				//PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
 				p1.setStoryMode(true);
 				//g2.setStoryMode(true);
 			}

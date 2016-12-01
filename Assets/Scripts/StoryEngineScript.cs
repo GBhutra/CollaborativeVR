@@ -175,7 +175,7 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CaveIntro:
-			//print (" Story : Cave Intro or Shot 2, step: " + step + " mState: " + m.getState ());   
+			print (" Story : Cave Intro or Shot 2, step: " + step + " mState: " + m.getState ());   
 			// The mother is waiting asking her to introduce the cave
 			if (5 == m.getState ()) {
 				switch (step) {
@@ -198,29 +198,29 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CrossRoads:
-			//print (" Story : Cave Expl or Shot 3, step: " + step + " mState: " + m.getState ());   
+			print (" Story : Cave Expl or Shot 3, step: " + step + " mState: " + m.getState ());   
 			switch (step) {
 			case 0:
 				//Check if Both Players are in cross roads with the mother 
 				if (true == getPlayerRefrences ()) {
 				//if (!crossRoadExpl && 5 < (mother.transform.position - player1.transform.position).magnitude
 				//&& 5 < (mother.transform.position - player2.transform.position).magnitude && 5 == m.getState ()) {
-					if (5 < (mother.transform.position - player1.transform.position).magnitude) {
+					if (8 < (mother.transform.position - player1.transform.position).magnitude) {
 						if (0 < warningTimeout) {
-							//print ("Warning time : " + warningTimeout);						
+							print ("Warning time left: " + warningTimeout);						
 							warningTimeout -= Time.deltaTime;
 							//startTalking(int w) : motherAudio.Timeout1 => intro Warning and motherAudio.Timeout2 => crossroads Warning
 							if (0 > warningTimeout)
 								m.startTalking ((int)motherAudio.Timeout1);
-
 						}
 						//stubborn players still havent moved !! getting the end timer going. 
 						else {
-							//print ("Warning time : " + endTimeOut);
+							print ("Ending time left : " + endTimeOut);
 							endTimeOut -= Time.deltaTime;
 							if (0 > endTimeOut) {
-								//end:: ending variable : true => good end, false => bad end
-								end = false;
+                                print("Alas ! the players did not participate moving to sad end !");
+                                //end:: ending variable : true => good end, false => bad end
+                                end = false;
 								p.MoveNext (Command.toEnd);
 							}
 						}
@@ -322,7 +322,7 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.End:
-			//print ("End of the Story !!");
+			print ("End of the Story !!");
 			GameObject endingType = new GameObject ();
 			if (end)
 				endingType.name = "goodEnd";
