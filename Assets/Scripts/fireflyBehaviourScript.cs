@@ -118,14 +118,14 @@ public class fireflyBehaviourScript : MonoBehaviour
         float angleToCamera = Vector3.Angle(FPSCam.transform.forward, startPos);
         Vector3 diff;
         print("angle to Target : " + angleToTarget + " angle to camera : " + angleToCamera + " currState : " + p.CurrentState);
-        if (10 < angleToTarget)
+        if (15 < angleToTarget)
         {
             switch (p.CurrentState)
             {
                 case ProcessState.Start:
                     //Moving the firefly to the bottom of the view
                     destination = FPSCam.transform.position + FPSCam.transform.forward * 1.0f;
-                    destination.y -= 3.0f;
+                    destination.y -= 1.0f;
                     transform.position = destination;
                     timeOut = 1.5f;
                     p.MoveNext(Command.toTimer);
@@ -148,7 +148,9 @@ public class fireflyBehaviourScript : MonoBehaviour
 
                 case ProcessState.InView:
                     destination = FPSCam.transform.position + FPSCam.transform.forward * 2f;
+                    destination.y += 0.8f;
                     diff = transform.position - destination;
+                   
                     if (1 < diff.magnitude)
                         transform.position -= 0.02f * diff;
                     else
