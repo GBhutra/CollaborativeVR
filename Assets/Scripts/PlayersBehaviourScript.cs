@@ -148,7 +148,7 @@ public class PlayersBehaviourScript : MonoBehaviour
     public void setStoryMode(bool val)
     {
         b_Distracted = false;
-        if (false == val && distractor!= null)
+        if (false == val)
             if (distractor.activeSelf)
                 distractor.SetActive(false);
         print("Setting the  StoryMode in Player :" + val);
