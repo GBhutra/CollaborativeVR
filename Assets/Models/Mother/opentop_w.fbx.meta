@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: c30dce934bb85b24d8d0eab4d8545780
-timeCreated: 1480563829
+guid: 284949e00783e424f943791bc7995d10
+timeCreated: 1480869761
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -84,8 +84,8 @@ ModelImporter:
     4300000: hair02
     4300002: clothing
     4300004: body
-    7400000: mixamo.com
     9500000: //RootNode
+    11100000: //RootNode
     13700000: body
     13700002: clothing
   materials:
@@ -102,7 +102,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
