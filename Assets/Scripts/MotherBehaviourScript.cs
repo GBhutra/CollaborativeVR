@@ -86,12 +86,16 @@ public class MotherBehaviourScript : MonoBehaviour {
 	//This variable has the destination to which the mother has to go when she is in the walking state
 	private Vector3 dest;
 
+    //This is the reference of mother animation handler in
+    private MotherAnimationHandler anim;
+
 	//Temp variable	
 	float talkingTimer = 5.0f;
 
 	// Use this for initialization
 	void Start () {
 		p = new Process ();
+        anim = gameObject.GetComponentInChildren<MotherAnimationHandler>();
 		audioSrc = transform.GetComponent<AudioSource>();
 		naviAgent = transform.GetComponent<NavMeshAgent> ();
 		naviAgent.Stop ();
@@ -108,8 +112,9 @@ public class MotherBehaviourScript : MonoBehaviour {
 			print("Mother : Walking Dist: " + naviAgent.remainingDistance );
 			if (3 > naviAgent.remainingDistance)	{ // destination is reached 
 				naviAgent.Stop();
-				//Wait for the storyEngine to decide what to do nextß
-				p.MoveNext(Command.toWait);
+                    //Wait for the storyEngine to decide what to do nextß
+                    print(anim.switchToIdle());
+                    p.MoveNext(Command.toWait);
 			}
 			// Move towards the dest
 			else {
@@ -127,12 +132,15 @@ public class MotherBehaviourScript : MonoBehaviour {
                 //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
                 PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
                 p1.setStoryMode(false);
-                //GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
-                //g1.setStoryMode(false);
-                //g2.setStoryMode(false );
-                p.MoveNext (Command.toWait);
+                    //GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
+                    //g1.setStoryMode(false);
+                    //g2.setStoryMode(false );
+                    print(anim.switchToIdle());
+                    p.MoveNext (Command.toWait);
 			}
 			break;
+            case ProcessState.Waiting:
+                break;
 		}
 	}
 
@@ -145,14 +153,16 @@ public class MotherBehaviourScript : MonoBehaviour {
 	public void moveTo(Vector3 location)	{
 		//dest = location;
 		p.MoveNext (Command.toWalk);
+        print(anim.switchToRun());
 		naviAgent.SetDestination(location);
 		naviAgent.Resume ();
 	}
 
 	public void startTalking(int speech)	{
 		GameObject player1 = GameObject.FindWithTag("FirstPlayer");
-		//GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-		if (null!=player1)// && null != player2)
+        //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+        print(anim.switchToExplain());
+        if (null!=player1)// && null != player2)
 		{
 			if (3 == speech || 5 == speech) 
 			{
