@@ -92,6 +92,9 @@ public class MotherBehaviourScript : MonoBehaviour {
 	//Temp variable	
 	float talkingTimer = 5.0f;
 
+    //
+    private int talkingType = 0;
+
 	// Use this for initialization
 	void Start () {
 		p = new Process ();
@@ -110,7 +113,8 @@ public class MotherBehaviourScript : MonoBehaviour {
 			break;
 		case ProcessState.Walking:
 			print("Mother : Walking Dist: " + naviAgent.remainingDistance );
-			if (3 > naviAgent.remainingDistance)	{ // destination is reached 
+            
+            if (3 > naviAgent.remainingDistance)	{ // destination is reached 
 				naviAgent.Stop();
                     //Wait for the storyEngine to decide what to do nextß
                     print(anim.switchToIdle());
@@ -118,15 +122,20 @@ public class MotherBehaviourScript : MonoBehaviour {
 			}
 			// Move towards the dest
 			else {
-				//Vector3 diff = dest - transform.position;
-				//transform.position += diff * speed;
-			}
+                    print(anim.switchToRun());
+                    //Vector3 diff = dest - transform.position;
+                    //transform.position += diff * speed;
+                }
 			break;
 		case ProcessState.Talking:
-			print("Mother : CaveIntro time Left: "+talkingTimer);
-			//TODO: Play the audio for on cave intro and move the state to wait
-			// temporarily wait for a timeout
-			talkingTimer -= Time.deltaTime;
+			print("Mother : Talking time Left: "+talkingTimer);
+                //TODO: Play the audio for on cave intro and move the state to wait
+                // temporarily wait for a timeout
+                if (0 == talkingType)
+                    print(anim.switchToExplain());
+                else
+                    print(anim.switchToAngry());
+            talkingTimer -= Time.deltaTime;
 			if (0 > talkingTimer) {
 				GameObject player1 = GameObject.FindWithTag("FirstPlayer");
                 //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
@@ -140,6 +149,7 @@ public class MotherBehaviourScript : MonoBehaviour {
 			}
 			break;
             case ProcessState.Waiting:
+                print(anim.switchToIdle());
                 break;
 		}
 	}
@@ -153,7 +163,6 @@ public class MotherBehaviourScript : MonoBehaviour {
 	public void moveTo(Vector3 location)	{
 		//dest = location;
 		p.MoveNext (Command.toWalk);
-        print(anim.switchToRun());
 		naviAgent.SetDestination(location);
 		naviAgent.Resume ();
 	}
@@ -161,9 +170,17 @@ public class MotherBehaviourScript : MonoBehaviour {
 	public void startTalking(int speech)	{
 		GameObject player1 = GameObject.FindWithTag("FirstPlayer");
         //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-        print(anim.switchToExplain());
         if (null!=player1)// && null != player2)
 		{
+            if (4==speech || 6==speech)
+            {
+                talkingType = 1;
+                print(anim.switchToAngry());
+            }
+            else
+            {
+                talkingType = 0;
+            }
 			if (3 == speech || 5 == speech) 
 			{
 				PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
