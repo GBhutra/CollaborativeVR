@@ -281,7 +281,7 @@ public class MotherAnimationHandler : MonoBehaviour
     {
 
         string output;
-
+        /*
         //call to run
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -330,6 +330,7 @@ public class MotherAnimationHandler : MonoBehaviour
             output = switchToWalkWithBaby();
             Debug.Log(output);
         }
+        */
 
     }
 }
