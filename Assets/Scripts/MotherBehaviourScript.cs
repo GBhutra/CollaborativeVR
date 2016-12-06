@@ -108,11 +108,11 @@ public class MotherBehaviourScript : MonoBehaviour {
 		switch (p.CurrentState) {
 
 		case ProcessState.Start:
-			print ("Mother : Start");
+			//print ("Mother : Start");
 			p.MoveNext (Command.toWait);
 			break;
 		case ProcessState.Walking:
-			print("Mother : Walking Dist: " + naviAgent.remainingDistance );
+			//print("Mother : Walking Dist: " + naviAgent.remainingDistance );
             
             if (3 > naviAgent.remainingDistance)	{ // destination is reached 
 				naviAgent.Stop();
@@ -128,7 +128,8 @@ public class MotherBehaviourScript : MonoBehaviour {
                 }
 			break;
 		case ProcessState.Talking:
-			print("Mother : Talking time Left: "+talkingTimer);
+			lookAtPlayers ();
+			//print("Mother : Talking time Left: "+talkingTimer);
                 //TODO: Play the audio for on cave intro and move the state to wait
                 // temporarily wait for a timeout
                 if (0 == talkingType)
@@ -186,12 +187,24 @@ public class MotherBehaviourScript : MonoBehaviour {
 				PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
 				//PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
 				p1.setStoryMode(true);
+
 				//g2.setStoryMode(true);
 			}
 			p.MoveNext(Command.toTalk);
 			audioSrc.clip = audioFiles[speech];
 			audioSrc.Play();
 			talkingTimer = audioSrc.clip.length;
+		}
+	}
+
+	private void lookAtPlayers()	{
+		GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+		GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+		if (null != player1 && null == player2) {
+			transform.LookAt (player1.transform);
+		} else if (null != player1 && null != player2) {
+			Vector3 targetPos = player2.transform.position + (player1.transform.position - player2.transform.position) * 0.5f;
+			transform.LookAt (targetPos);
 		}
 	}
 }
