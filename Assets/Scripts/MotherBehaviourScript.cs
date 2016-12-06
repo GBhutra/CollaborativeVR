@@ -13,8 +13,8 @@ public class MotherBehaviourScript : MonoBehaviour {
 	 * End : Based on the baby found or not
 	*/
 
-	enum ProcessState { Start=0, Walking=1, Talking=2, Waiting=5, End=6 	};
-	enum Command	  { toWalk , toWait, toTalk, toEnd };
+	enum ProcessState { Start=0, Walking=1, Talking=2, Waiting=5, Animation=6, End=7 	};
+	enum Command	  { toWalk , toWait, toTalk, toAnimation, toEnd };
 
 	class Process
 	{
@@ -52,9 +52,11 @@ public class MotherBehaviourScript : MonoBehaviour {
 			{
 				{ new StateTransition(ProcessState.Start, Command.toWait), ProcessState.Waiting },
 				{ new StateTransition(ProcessState.Walking, Command.toWait), ProcessState.Waiting },
-				{ new StateTransition(ProcessState.Waiting, Command.toTalk), ProcessState.Talking },
 				{ new StateTransition(ProcessState.Talking, Command.toWait), ProcessState.Waiting },
-				{ new StateTransition(ProcessState.Waiting, Command.toWalk), ProcessState.Walking }
+                { new StateTransition(ProcessState.Animation, Command.toWait), ProcessState.Waiting },
+                { new StateTransition(ProcessState.Waiting, Command.toTalk), ProcessState.Talking },
+                { new StateTransition(ProcessState.Waiting, Command.toAnimation), ProcessState.Animation },
+                { new StateTransition(ProcessState.Waiting, Command.toWalk), ProcessState.Walking }
 
 			};
 		}
@@ -85,12 +87,15 @@ public class MotherBehaviourScript : MonoBehaviour {
 
 	//This variable has the destination to which the mother has to go when she is in the walking state
 	private Vector3 dest;
+    private float distFromDest = 5.0f;
 
     //This is the reference of mother animation handler in
     private MotherAnimationHandler anim;
 
 	//Temp variable	
-	float talkingTimer = 5.0f;
+	float talkingTimer = 0.0f;
+    float animationTimer = 2.3f;
+    private bool holdingBaby = false;
 
     //angry or explanation animation !!
     private int talkingType = 0;
@@ -111,53 +116,50 @@ public class MotherBehaviourScript : MonoBehaviour {
 		switch (p.CurrentState) {
 
 		case ProcessState.Start:
-			//print ("Mother : Start");
+			print ("Mother : Start");
 			p.MoveNext (Command.toWait);
 			break;
 		case ProcessState.Walking:
-			//print("Mother : Walking Dist: " + naviAgent.remainingDistance );
+			print("Mother : Walking Dist: " + naviAgent.remainingDistance );
             
-            if (3 > naviAgent.remainingDistance)	{ // destination is reached 
+            if (distFromDest > naviAgent.remainingDistance)	{ // destination is reached 
 				naviAgent.Stop();
                     //Wait for the storyEngine to decide what to do nextß
-                    print(anim.switchToIdle());
+                    anim.switchToIdle();
                     p.MoveNext(Command.toWait);
 			}
 			// Move towards the dest
 			else {
-                    print(anim.switchToRun());
+                    if (holdingBaby)
+                        anim.switchToWalkWithBaby();
+                    else
+                        anim.switchToRun();
                     //Vector3 diff = dest - transform.position;
                     //transform.position += diff * speed;
                 }
 			break;
 		case ProcessState.Talking:
 			lookAtPlayers ();
-			//print("Mother : Talking time Left: "+talkingTimer);
-                //TODO: Play the audio for on cave intro and move the state to wait
-                // temporarily wait for a timeout
-                if (0 == talkingType)
-                    print(anim.switchToExplain());
-                else
-                    print(anim.switchToAngry());
+			print("Mother : Talking time Left: "+talkingTimer);
             talkingTimer -= Time.deltaTime;
 			if (0 > talkingTimer) {
                 GameObject player1 = GameObject.FindWithTag("FirstPlayer");
-                //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+                GameObject player2 = GameObject.FindWithTag("SecondPlayer");
                 if (0==speeches.Count)
                 {
-                    if (null != player1)// && null != player2)
+                    if (null != player1 && null != player2)
                     {
                         PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-                        //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                        PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
                         p1.setStoryMode(false);
-                        //p2.setStoryMode(false);
-                        print(anim.switchToIdle());
+                        p2.setStoryMode(false);
+                        anim.switchToIdle();
                         p.MoveNext(Command.toWait);
                     }
                 }
                 else
                 {
-                    if (null != player1)// && null != player2)
+                    if (null != player1 && null != player2)
                     {
                         int speech = speeches.Dequeue();
                         audioSrc.clip = audioFiles[speech];
@@ -166,25 +168,40 @@ public class MotherBehaviourScript : MonoBehaviour {
                             if (4 == speech || 6 == speech || 0 == speech || 1 == speech || 2 == speech)
                         {
                             talkingType = 1;
-                            print(anim.switchToAngry());
+                            anim.switchToAngry();
                         }
                         else
                         {
                             talkingType = 0;
+                            anim.switchToExplain();
                         }
                         if (3 == speech || 5 == speech)
                         {
                             PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-                            //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                            PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
                             p1.setStoryMode(true);
-                            //p2.setStoryMode(true);
+                            p2.setStoryMode(true);
                         }
                     }
                 }                
 			}
 			break;
+            case ProcessState.Animation:
+                anim.switchToPickUpBaby();
+                animationTimer -= Time.deltaTime;
+                if (0 > animationTimer)
+                {
+                    p.MoveNext(Command.toWait);
+                    GameObject.Find("Baby").SetActive(false);
+                    transform.FindChild("babyWithMom").gameObject.SetActive(true);
+                    holdingBaby = true;
+                }
+                break;
             case ProcessState.Waiting:
-                print(anim.switchToIdle());
+                if (holdingBaby)
+                    anim.switchToStandWithBaby();
+                else
+                    anim.switchToIdle();
                 break;
 		}
 	}
@@ -195,8 +212,8 @@ public class MotherBehaviourScript : MonoBehaviour {
 	}
 
 	//This method is invoked by the story engine and makes the mother to move from to a certain location
-	public void moveTo(Vector3 location)	{
-		//dest = location;
+	public void moveTo(Vector3 location,float close=5.0f)	{
+        distFromDest = close;
 		p.MoveNext (Command.toWalk);
 		naviAgent.SetDestination(location);
 		naviAgent.Resume ();
@@ -205,38 +222,17 @@ public class MotherBehaviourScript : MonoBehaviour {
 	public void startTalking(int speech)	{
         speeches.Enqueue(speech);
         p.MoveNext(Command.toTalk);
-		/*GameObject player1 = GameObject.FindWithTag("FirstPlayer");
-        //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-        if (null!=player1)// && null != player2)
-		{
-            if (4==speech || 6==speech || 0 == speech || 1 == speech || 2 == speech)
-            {
-                talkingType = 1;
-                print(anim.switchToAngry());
-            }
-            else
-            {
-                talkingType = 0;
-            }
-			if (3 == speech || 5 == speech) 
-			{
-				PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-				//PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
-				p1.setStoryMode(true);
-
-				//g2.setStoryMode(true);
-			}
-			p.MoveNext(Command.toTalk);
-			audioSrc.clip = audioFiles[speech];
-			audioSrc.Play();
-			talkingTimer = audioSrc.clip.length+0.8f;
-		}*/
 	}
 
     public void startTalkingBatches(Queue<int> spchs)
     {
         speeches = spchs;
         p.MoveNext(Command.toTalk);
+    }
+
+    public void startPickingUpBaby()
+    {
+        p.MoveNext(Command.toAnimation);
     }
 
     private void lookAtPlayers()	{

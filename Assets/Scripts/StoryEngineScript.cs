@@ -198,14 +198,15 @@ public class StoryEngineScript : MonoBehaviour {
 			}
 			break;
 		case Shot.CrossRoads:
-			//print (" Story : Cave Expl or Shot 3, step: " + step + " mState: " + m.getState ());   
+			print (" Story : Cave Expl or Shot 3, step: " + step + " mState: " + m.getState ());   
 			switch (step) {
 			case 0:
 				//Check if Both Players are in cross roads with the mother 
 				if (true == getPlayerRefrences ()) {
-				//if (!crossRoadExpl && 5 < (mother.transform.position - player1.transform.position).magnitude
-				//&& 5 < (mother.transform.position - player2.transform.position).magnitude && 5 == m.getState ()) {
-					if (8 < (mother.transform.position - player1.transform.position).magnitude) {
+                    float distP1 = (mother.transform.position - player1.transform.position).magnitude;
+                    float distP2 = (mother.transform.position - player2.transform.position).magnitude;
+                    if (5 < distP1 && 5 < distP2) {
+					//if (8 < (mother.transform.position - player1.transform.position).magnitude) {
 						if (0 < warningTimeout) {
 							//print ("Warning time left: " + warningTimeout);						
 							warningTimeout -= Time.deltaTime;
@@ -220,12 +221,11 @@ public class StoryEngineScript : MonoBehaviour {
 							if (0 > endTimeOut) {
                                 //print("Alas ! the players did not participate moving to sad end !");
                                 //end:: ending variable : true => good end, false => bad end
-                                //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
                                 PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-                                //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                                PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
                                 p1.setPlayerLocationLock(true);
-                                //p2.setPlayerLocationLock(true);
-                                step = 7;
+                                p2.setPlayerLocationLock(true);
+                                step = 17;
 							}
 						}
 					} else {
@@ -309,20 +309,24 @@ public class StoryEngineScript : MonoBehaviour {
                         {
                             if (7 > (player1.transform.position - baby.transform.position).magnitude) { 
                                 PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-                                //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
                                 p1.setPlayerLocationLock(true);
-                                //p2.setPlayerLocationLock(true);
+                                
+                            }
+                            if (7 > (player2.transform.position - baby.transform.position).magnitude)
+                            {
+                                PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                                p2.setPlayerLocationLock(true);
                             }
                             float dist1 = (mother.transform.position-player1.transform.position).magnitude;
-                            //float dist2 = (mother.transform.position - player2.transform.position).magnitude;
-                            //if (dist1 > dist2)
-                            //m.moveTo(player2.transform.position + new Vector3(1, 1, 0));
-                            //else
-                                m.moveTo(player1.transform.position + new Vector3(1, 0, 1));
-                                dist = (mother.transform.position - baby.transform.position).magnitude;
-                      }
-					if (0>dist)
-						step++;
+                            float dist2 = (mother.transform.position - player2.transform.position).magnitude;
+                            if (dist1 > dist2)
+                                m.moveTo(player2.transform.position, 3.2f);
+                            else
+                                m.moveTo(player1.transform.position, 3.2f);
+                            dist = (mother.transform.position - player1.transform.position).magnitude;
+                            if (3 > dist)
+                                step++;
+                       }
 				}
 				break;
 				//Mother reached the babys cave
@@ -334,12 +338,44 @@ public class StoryEngineScript : MonoBehaviour {
 				break;
 			case 6:
 				if (5 == m.getState()) {
-                    m.moveTo(baby.transform.position+new Vector3(0.5f,0f,0.5f));
-                    p.MoveNext(Command.toEnd);
+                    m.moveTo(baby.transform.position, 1.0f);
+                    dist = (mother.transform.position - baby.transform.position).magnitude;
+                    if (1.0f > dist)
+                        step++;
                 }
 				break;
-            /*The players have not moved at all go to the player location and yell at them*/
             case 7:
+                if (5 == m.getState())
+                {
+                    m.startPickingUpBaby();
+                    step++;
+                }
+                break;
+            case 8:
+                if (5 == m.getState())
+                {
+                    m.moveTo(player1.transform.position, 3.0f);
+                    dist = (mother.transform.position - player1.transform.position).magnitude;
+                    if (3.0f > dist)
+                        step++;
+                }
+                break;
+            case 9:
+                if (5 == m.getState())
+                {
+                    Queue<int> speech = new Queue<int>();
+                    speech.Enqueue((int)motherAudio.ReUnite1);
+                    if (5 < (mother.transform.position - player1.transform.position).magnitude && 5 < (mother.transform.position - player2.transform.position).magnitude)
+                    {
+                        speech.Enqueue((int)motherAudio.ReUnite2);
+                    }
+                    speech.Enqueue((int)motherAudio.ReUnite3);
+                    m.startTalkingBatches(speech);
+                    p.MoveNext(Command.toEnd);
+                }
+                break;
+                    /*The players have not moved at all go to the player location and yell at them*/
+                    case 17:
                 //TODO: Lock the players
                 if (5 == m.getState())
                 {
@@ -351,7 +387,7 @@ public class StoryEngineScript : MonoBehaviour {
                 }
                 break;
             //Yell at the players
-            case 8:
+            case 18:
                 if (5 == m.getState())
                 {
                     Queue<int> speech = new Queue<int>();
@@ -362,7 +398,7 @@ public class StoryEngineScript : MonoBehaviour {
                     step++;
                 }
                 break;
-            case 09:
+            case 19:
                 if (5 == m.getState())
                 {
                     m.moveTo(locations[(int)ELocations.CrossRoad]);
@@ -394,8 +430,8 @@ public class StoryEngineScript : MonoBehaviour {
 	//Helper function : returns true if it finds both the players and assignes them to player1 and player 2 variable else returns false
 	bool getPlayerRefrences()	{
 		player1 = GameObject.FindWithTag("FirstPlayer");
-		//player2 = GameObject.FindWithTag("SecondPlayer");
-		if (null != player1)// && null != player2)
+		player2 = GameObject.FindWithTag("SecondPlayer");
+		if (null != player1 && null != player2)
 			return true;
 		else
 			return false;

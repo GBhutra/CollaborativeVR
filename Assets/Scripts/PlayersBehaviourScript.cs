@@ -11,7 +11,7 @@ public class PlayersBehaviourScript : MonoBehaviour
 
     private GameObject baby;
 
-    private RotationMode selectedMode = RotationMode.SnapToTarget;
+    private RotationMode selectedMode = RotationMode.GuidedRotation;
 
     private Transform target;
     private GameObject distractor;
