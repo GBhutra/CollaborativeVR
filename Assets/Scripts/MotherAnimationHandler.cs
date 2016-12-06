@@ -12,6 +12,9 @@ public class MotherAnimationHandler : MonoBehaviour
     int idleToTurn = Animator.StringToHash("Idle-180Turn");
     int idleToAngry = Animator.StringToHash("Idle-Angry");
     int idleToExplain = Animator.StringToHash("Idle-Explaining");
+    int idleToPickUpBaby = Animator.StringToHash("Idle-PickUpBaby");
+    int idleToStandWBaby = Animator.StringToHash("Idle-StandWithBaby");
+    int idleToWalkWBaby = Animator.StringToHash("Idle-WalkWithBaby");
 
     //running sourced triggers
     int runToIdle = Animator.StringToHash("Running-Idle");
@@ -34,12 +37,15 @@ public class MotherAnimationHandler : MonoBehaviour
     int angryToIdle = Animator.StringToHash("AngryTalking-Idle");
 
     //pickupbaby sourced triggers
+    int pickUpBabyToIdle = Animator.StringToHash("PickUpBaby-Idle");
     int pickUpBabyToStandWBaby = Animator.StringToHash("PickUpBaby-StandWithBaby");
 
     //standwithbaby sourced triggers
+    int standWBabyToIdle = Animator.StringToHash("StandWithBaby-Idle");
     int standWBabyToWalkWBaby = Animator.StringToHash("StandWithBaby-WalkWithBaby");
 
     //walkwithbaby sourced triggers
+    int walkWBabyToIdle = Animator.StringToHash("WalkWithBaby-Idle");
     int walkWBabyToStandWBaby = Animator.StringToHash("WalkWithBaby-StandWithBaby");
     int walkWBabyToExit = Animator.StringToHash("WalkWithBaby-Exit");
 
@@ -86,6 +92,24 @@ public class MotherAnimationHandler : MonoBehaviour
         {
             anim.SetTrigger(explainToIdle);
             return "explaining to idle";
+        }
+        //pickUpBaby
+        else if (stateInfo.fullPathHash == pickUpBabyStateHash)
+        {
+            anim.SetTrigger(pickUpBabyToIdle);
+            return "pickUpBaby to idle";
+        }
+        //standWBaby
+        else if (stateInfo.fullPathHash == standWBabyStateHash)
+        {
+            anim.SetTrigger(standWBabyToIdle);
+            return "standWBaby to idle";
+        }
+        //walkWBaby
+        else if (stateInfo.fullPathHash == walkWBabyStateHash)
+        {
+            anim.SetTrigger(walkWBabyToIdle);
+            return "walkWBaby to idle";
         }
         return "cannot transition from this state";
     }
@@ -215,8 +239,14 @@ public class MotherAnimationHandler : MonoBehaviour
     {
         stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
+        //idle
+        if (stateInfo.fullPathHash == idleStateHash)
+        {
+            anim.SetTrigger(idleToPickUpBaby);
+            return "idle to pickUpBaby";
+        }
         //running
-        if (stateInfo.fullPathHash == runningStateHash)
+        else if (stateInfo.fullPathHash == runningStateHash)
         {
             anim.SetTrigger(runToPickUpBaby);
             return "running to pickUpBaby";
@@ -234,9 +264,15 @@ public class MotherAnimationHandler : MonoBehaviour
     public string switchToStandWithBaby()
     {
         stateInfo = anim.GetCurrentAnimatorStateInfo(0);
-
+        
+        //idle
+        if (stateInfo.fullPathHash == idleStateHash)
+        {
+            anim.SetTrigger(idleToStandWBaby);
+            return "idle to standWBaby";
+        }
         //pickUpBaby
-        if (stateInfo.fullPathHash == pickUpBabyStateHash)
+        else if (stateInfo.fullPathHash == pickUpBabyStateHash)
         {
             anim.SetTrigger(pickUpBabyToStandWBaby);
             return "pickUpBaby to standWBaby";
@@ -261,8 +297,14 @@ public class MotherAnimationHandler : MonoBehaviour
     {
         stateInfo = anim.GetCurrentAnimatorStateInfo(0);
 
+        //idle
+        if (stateInfo.fullPathHash == idleStateHash)
+        {
+            anim.SetTrigger(idleToWalkWBaby);
+            return "idle to walkWBaby";
+        }
         //standWBaby
-        if (stateInfo.fullPathHash == standWBabyStateHash)
+        else if (stateInfo.fullPathHash == standWBabyStateHash)
         {
             anim.SetTrigger(standWBabyToWalkWBaby);
             return "standWBaby to walkWBaby";
@@ -281,7 +323,7 @@ public class MotherAnimationHandler : MonoBehaviour
     {
 
         string output;
-        
+        /*
         //call to run
         if (Input.GetKeyDown(KeyCode.H))
         {
@@ -330,7 +372,7 @@ public class MotherAnimationHandler : MonoBehaviour
             output = switchToWalkWithBaby();
             Debug.Log(output);
         }
-        
+        */
 
     }
 }
