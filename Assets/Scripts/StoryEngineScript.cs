@@ -305,9 +305,23 @@ public class StoryEngineScript : MonoBehaviour {
 				if (babyFound) {
 					end = true;
 					GameObject baby = GameObject.Find ("Baby");
-					m.moveTo (baby.transform.position);
-					dist = (mother.transform.position - baby.transform.position).magnitude;
-					if (10>dist)
+                        if (getPlayerRefrences())
+                        {
+                            if (7 > (player1.transform.position - baby.transform.position).magnitude) { 
+                                PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+                                //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                                p1.setPlayerLocationLock(true);
+                                //p2.setPlayerLocationLock(true);
+                            }
+                            float dist1 = (mother.transform.position-player1.transform.position).magnitude;
+                            //float dist2 = (mother.transform.position - player2.transform.position).magnitude;
+                            //if (dist1 > dist2)
+                            //m.moveTo(player2.transform.position + new Vector3(1, 1, 0));
+                            //else
+                                m.moveTo(player1.transform.position + new Vector3(1, 0, 1));
+                                dist = (mother.transform.position - baby.transform.position).magnitude;
+                      }
+					if (0>dist)
 						step++;
 				}
 				break;
@@ -320,8 +334,9 @@ public class StoryEngineScript : MonoBehaviour {
 				break;
 			case 6:
 				if (5 == m.getState()) {
-					p.MoveNext (Command.toEnd);
-				}
+                    m.moveTo(baby.transform.position+new Vector3(0.5f,0f,0.5f));
+                    p.MoveNext(Command.toEnd);
+                }
 				break;
             /*The players have not moved at all go to the player location and yell at them*/
             case 7:
