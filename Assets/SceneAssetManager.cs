@@ -15,8 +15,13 @@ public class SceneAssetManager : MonoBehaviour {
     private bool introSceneViewerPositioning = false;
     private bool introViewer1Positioning = false;
     private bool introViewer2Positioning = false;
+    private bool outroSceneViewerPositioning = false;
+    private bool outroViewer1Positioning = false;
+    private bool outroViewer2Positioning = false;
     private Vector3 introViewer1Position = new Vector3(-3.39525f, 0.96f, 4.989603f);
     private Vector3 introViewer2Position = new Vector3(-1.61f, 0.96f, 3.53f);
+    private Vector3 outroViewer1Position = new Vector3(0, 1, -10f);
+    private Vector3 outroViewer2Position = new Vector3(1, 1, -11f);
 
     void Awake ()
     {
@@ -78,6 +83,31 @@ public class SceneAssetManager : MonoBehaviour {
 
             }
            
+        }
+
+        if (!outroSceneViewerPositioning)
+        {
+            if (SceneManager.GetActiveScene().name == outroScene)
+            {
+                if (!outroViewer1Positioning && TagPlayers.foundFirstPlayer)
+                {
+                    GameObject.FindGameObjectWithTag("FirstPlayer").transform.position = outroViewer1Position;
+                    GameObject.FindGameObjectWithTag("FirstPlayer").GetComponent<PlayersBehaviourScript>().enabled = false;
+                    outroViewer1Positioning = true;
+                }
+                if (!outroViewer2Positioning && TagPlayers.foundSecondPlayer)
+                {
+                    GameObject.FindGameObjectWithTag("SecondPlayer").transform.position = outroViewer2Position;
+                    GameObject.FindGameObjectWithTag("SecondPlayer").GetComponent<PlayersBehaviourScript>().enabled = false;
+                    outroViewer2Positioning = true;
+                }
+                if (outroViewer1Positioning && outroViewer2Positioning)
+                {
+                    outroSceneViewerPositioning = true;
+                }
+
+            }
+
         }
 
 
