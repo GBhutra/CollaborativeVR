@@ -11,7 +11,7 @@ public class PlayersBehaviourScript : MonoBehaviour
 
     private GameObject baby;
 
-    private RotationMode selectedMode = RotationMode.GuidedRotation;
+    private RotationMode selectedMode = RotationMode.SnapToTarget;
 
     private Transform target;
     private GameObject distractor;
@@ -156,8 +156,13 @@ public class PlayersBehaviourScript : MonoBehaviour
 
         if (RotationMode.GuidedRotation==selectedMode || RotationMode.SnapToTarget==selectedMode)
         {
-            gameObject.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().enabled = !val;
+            setPlayerLocationLock(val);
         }
+    }
+
+    public void setPlayerLocationLock(bool val)
+    {
+        gameObject.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().enabled = !val;
     }
 }
 

@@ -220,8 +220,12 @@ public class StoryEngineScript : MonoBehaviour {
 							if (0 > endTimeOut) {
                                 //print("Alas ! the players did not participate moving to sad end !");
                                 //end:: ending variable : true => good end, false => bad end
-                                end = false;
-								p.MoveNext (Command.toEnd);
+                                //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
+                                PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+                                //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                                p1.setPlayerLocationLock(true);
+                                //p2.setPlayerLocationLock(true);
+                                step = 7;
 							}
 						}
 					} else {
@@ -319,18 +323,55 @@ public class StoryEngineScript : MonoBehaviour {
 					p.MoveNext (Command.toEnd);
 				}
 				break;
-			}
-			break;
+            /*The players have not moved at all go to the player location and yell at them*/
+            case 7:
+                //TODO: Lock the players
+                if (5 == m.getState())
+                {
+                    dist = (mother.transform.position - locations[(int)ELocations.Cave3]).magnitude;
+                    if (5 > dist)
+                        step++;
+                    else
+                        m.moveTo(locations[(int)ELocations.Cave3]);
+                }
+                break;
+            //Yell at the players
+            case 8:
+                if (5 == m.getState())
+                {
+                    Queue<int> speech = new Queue<int>();
+                    speech.Enqueue((int)motherAudio.Bad1);
+                    speech.Enqueue((int)motherAudio.Bad2);
+                    speech.Enqueue((int)motherAudio.Bad3);
+                    m.startTalkingBatches(speech);
+                    step++;
+                }
+                break;
+            case 09:
+                if (5 == m.getState())
+                {
+                    m.moveTo(locations[(int)ELocations.CrossRoad]);
+                    end = false;
+                    p.MoveNext(Command.toEnd);
+                }
+                break;
+            }
+        break;
 		case Shot.End:
 			//print ("End of the Story !!");
-			GameObject endingType = new GameObject ();
-			if (end)
-				endingType.name = "goodEnd";
-			else
-				endingType.name = "badEnd";
-			DontDestroyOnLoad (endingType);
-			Application.LoadLevel(Application.loadedLevel + 1);
-			break;
+            //Let the mother finish her last thing
+            if(5==m.getState())
+            {
+                GameObject endingType = new GameObject();
+                if (end)
+                    endingType.name = "goodEnd";
+                else
+                    endingType.name = "badEnd";
+                DontDestroyOnLoad(endingType);
+                Application.LoadLevel(Application.loadedLevel + 1);
+                break;
+            }
+            break;
 		}
 	}
 

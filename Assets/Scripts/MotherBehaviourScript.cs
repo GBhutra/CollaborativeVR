@@ -92,12 +92,15 @@ public class MotherBehaviourScript : MonoBehaviour {
 	//Temp variable	
 	float talkingTimer = 5.0f;
 
-    //
+    //angry or explanation animation !!
     private int talkingType = 0;
 
-	// Use this for initialization
-	void Start () {
-		p = new Process ();
+    Queue<int> speeches;
+
+    // Use this for initialization
+    void Start () {
+        speeches = new Queue<int>();
+        p = new Process ();
         anim = gameObject.GetComponentInChildren<MotherAnimationHandler>();
 		audioSrc = transform.GetComponent<AudioSource>();
 		naviAgent = transform.GetComponent<NavMeshAgent> ();
@@ -138,15 +141,46 @@ public class MotherBehaviourScript : MonoBehaviour {
                     print(anim.switchToAngry());
             talkingTimer -= Time.deltaTime;
 			if (0 > talkingTimer) {
-				GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+                GameObject player1 = GameObject.FindWithTag("FirstPlayer");
                 //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
-                PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-                p1.setStoryMode(false);
-                    //GetCameraValues g2 = player2.GetComponent<GetCameraValues>();
-                    //g1.setStoryMode(false);
-                    //g2.setStoryMode(false );
-                    print(anim.switchToIdle());
-                    p.MoveNext (Command.toWait);
+                if (0==speeches.Count)
+                {
+                    if (null != player1)// && null != player2)
+                    {
+                        PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+                        //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                        p1.setStoryMode(false);
+                        //p2.setStoryMode(false);
+                        print(anim.switchToIdle());
+                        p.MoveNext(Command.toWait);
+                    }
+                }
+                else
+                {
+                    if (null != player1)// && null != player2)
+                    {
+                        int speech = speeches.Dequeue();
+                        audioSrc.clip = audioFiles[speech];
+                        audioSrc.Play();
+                        talkingTimer = audioSrc.clip.length + 0.8f;
+                            if (4 == speech || 6 == speech || 0 == speech || 1 == speech || 2 == speech)
+                        {
+                            talkingType = 1;
+                            print(anim.switchToAngry());
+                        }
+                        else
+                        {
+                            talkingType = 0;
+                        }
+                        if (3 == speech || 5 == speech)
+                        {
+                            PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+                            //PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                            p1.setStoryMode(true);
+                            //p2.setStoryMode(true);
+                        }
+                    }
+                }                
 			}
 			break;
             case ProcessState.Waiting:
@@ -169,11 +203,13 @@ public class MotherBehaviourScript : MonoBehaviour {
 	}
 
 	public void startTalking(int speech)	{
-		GameObject player1 = GameObject.FindWithTag("FirstPlayer");
+        speeches.Enqueue(speech);
+        p.MoveNext(Command.toTalk);
+		/*GameObject player1 = GameObject.FindWithTag("FirstPlayer");
         //GameObject player2 = GameObject.FindWithTag("SecondPlayer");
         if (null!=player1)// && null != player2)
 		{
-            if (4==speech || 6==speech)
+            if (4==speech || 6==speech || 0 == speech || 1 == speech || 2 == speech)
             {
                 talkingType = 1;
                 print(anim.switchToAngry());
@@ -193,11 +229,17 @@ public class MotherBehaviourScript : MonoBehaviour {
 			p.MoveNext(Command.toTalk);
 			audioSrc.clip = audioFiles[speech];
 			audioSrc.Play();
-			talkingTimer = audioSrc.clip.length;
-		}
+			talkingTimer = audioSrc.clip.length+0.8f;
+		}*/
 	}
 
-	private void lookAtPlayers()	{
+    public void startTalkingBatches(Queue<int> spchs)
+    {
+        speeches = spchs;
+        p.MoveNext(Command.toTalk);
+    }
+
+    private void lookAtPlayers()	{
 		GameObject player1 = GameObject.FindWithTag("FirstPlayer");
 		GameObject player2 = GameObject.FindWithTag("SecondPlayer");
 		if (null != player1 && null == player2) {

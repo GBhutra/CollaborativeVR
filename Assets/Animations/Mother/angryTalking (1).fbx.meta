@@ -108,7 +108,109 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: mixamo.com
+      takeName: mixamo.com
+      firstFrame: 0
+      lastFrame: 170
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: body
+        weight: 1
+      - path: clothing
+        weight: 1
+      - path: woman_blouse
+        weight: 1
+      - path: woman_blouse/Game_Hips
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_LeftUpLeg
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_LeftUpLeg/Game_LeftLeg
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_LeftUpLeg/Game_LeftLeg/Game_LeftFoot
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_RightUpLeg
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_RightUpLeg/Game_RightLeg
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_RightUpLeg/Game_RightLeg/Game_RightFoot
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand/Game_LeftHandIndex1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand/Game_LeftHandIndex1/Game_LeftHandIndex2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand/Game_LeftHandMiddle1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand/Game_LeftHandMiddle1/Game_LeftHandMiddle2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand/Game_LeftHandThumb1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_LeftShoulder/Game_LeftArm/Game_LeftForeArm/Game_LeftHand/Game_LeftHandThumb1/Game_LeftHandThumb2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand/Game_RightHandIndex1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand/Game_RightHandIndex1/Game_RightHandIndex2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand/Game_RightHandMiddle1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand/Game_RightHandMiddle1/Game_RightHandMiddle2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand/Game_RightHandThumb1
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_RightShoulder/Game_RightArm/Game_RightForeArm/Game_RightHand/Game_RightHandThumb1/Game_RightHandThumb2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_Spine2
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_Spine2/Game_Neck
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_Spine2/Game_Neck/Game_Head
+        weight: 1
+      - path: woman_blouse/Game_Hips/Game_Spine/Game_Spine1/Game_Spine2/Game_Neck/Game_Head/hair02
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
