@@ -11,7 +11,7 @@ public class PlayersBehaviourScript : MonoBehaviour
 
     private GameObject baby;
 
-    private RotationMode selectedMode = RotationMode.Distrator;
+    private RotationMode selectedMode = RotationMode.GuidedRotation;
 
     private Transform target;
     private GameObject distractor;
@@ -153,6 +153,11 @@ public class PlayersBehaviourScript : MonoBehaviour
                 distractor.SetActive(false);
         print("Setting the  StoryMode in Player :" + val);
         b_ongoingStory = val;
+
+        if (RotationMode.GuidedRotation==selectedMode || RotationMode.SnapToTarget==selectedMode)
+        {
+            gameObject.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().enabled = !val;
+        }
     }
 }
 
