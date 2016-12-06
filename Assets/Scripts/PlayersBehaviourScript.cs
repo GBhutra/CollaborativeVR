@@ -16,11 +16,13 @@ public class PlayersBehaviourScript : MonoBehaviour
     private Transform target;
     private GameObject distractor;
     private GameObject cam;
+    private int MonsterGateIndex = -1;
+    private int BabyGateIndex = -1;
 
     public float rotationRate = 0.25f;
 
     private bool b_Distracted = false;
-
+    private bool babyFound = false;
     //This is a boolean indicates that the mother is talking
     bool b_ongoingStory = false;
 
@@ -52,6 +54,15 @@ public class PlayersBehaviourScript : MonoBehaviour
                 s.visitedCave(3);
                 break;
         }
+        if (inGate==MonsterGateIndex)
+        {
+            GameObject.Find("Monster").GetComponentInChildren<AudioSource>().Play();
+        }
+        if (inGate==BabyGateIndex)
+        {
+            baby.GetComponentInChildren<AudioSource>().Play();
+        }
+
     }
     // Use this for initialization  
     void Start()
@@ -85,12 +96,15 @@ public class PlayersBehaviourScript : MonoBehaviour
                     break;
             }
         }
-
-        if (5 > (baby.transform.position - transform.position).magnitude)
+        if (!babyFound)
         {
-            GameObject cave = GameObject.Find("Cave");
-            StoryEngineScript s = cave.GetComponent<StoryEngineScript>();
-            s.setBabyFound(true);
+            if (5 > (baby.transform.position - transform.position).magnitude)
+            {
+                GameObject cave = GameObject.Find("Cave");
+                StoryEngineScript s = cave.GetComponent<StoryEngineScript>();
+                s.setBabyFound(true);
+                babyFound = true;
+            }
         }
     }
 
@@ -163,6 +177,15 @@ public class PlayersBehaviourScript : MonoBehaviour
     public void setPlayerLocationLock(bool val)
     {
         gameObject.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().enabled = !val;
+    }
+
+    public void setMonsterGateIndex(int val)
+    {
+        MonsterGateIndex = val;
+    }
+    public void setBabyGateIndex(int val)
+    {
+        BabyGateIndex = val;
     }
 }
 

@@ -252,26 +252,34 @@ public class StoryEngineScript : MonoBehaviour {
 				}
 				break;
 				//Let the players find the baby
-			case 2:
+			case 2: 
 				//print ("Game Time left: " + gameTimeOut);
 				gameTimeOut -= Time.deltaTime;
 				if (0 > gameTimeOut) {
 					end = false;
 					p.MoveNext (Command.toEnd);
 				}
-				//if any of the caves is visited place the monster!
-				if (cavesVisited [(int)ELocations.Cave1]) {
+                PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
+                PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
+                //if any of the caves is visited place the monster!
+                if (cavesVisited [(int)ELocations.Cave1]) {
 					monster.transform.position = locations [(int)ELocations.Cave1];
 					monsterCave = 1;
-					step++;
+                    p1.setMonsterGateIndex(monsterCave);
+                    p2.setMonsterGateIndex(monsterCave);
+                    step++;
 				} else if (cavesVisited [(int)ELocations.Cave2]) {
 					monster.transform.position = locations [(int)ELocations.Cave2];
 					monsterCave = 2;
-					step++;
-				} else if (cavesVisited [(int)ELocations.Cave4]) {
+                    p1.setMonsterGateIndex(monsterCave);
+                    p2.setMonsterGateIndex(monsterCave);
+                    step++;
+                } else if (cavesVisited [(int)ELocations.Cave4]) {
 					monster.transform.position = locations [(int)ELocations.Cave4];
 					monsterCave = 4;
-					step++;
+                    p1.setMonsterGateIndex(monsterCave);
+                    p2.setMonsterGateIndex(monsterCave);
+                    step++;
 				}
 				break;
 				//place the baby
@@ -281,20 +289,28 @@ public class StoryEngineScript : MonoBehaviour {
 					end = false;
 					p.MoveNext (Command.toEnd);
 				}
-				//if any of the caves is visited place the monster!
-				if (cavesVisited [(int)ELocations.Cave1] && 1 != monsterCave) {
+                PlayersBehaviourScript pl1 = player1.GetComponent<PlayersBehaviourScript>();
+                PlayersBehaviourScript pl2 = player2.GetComponent<PlayersBehaviourScript>();
+                //if any of the caves is visited place the monster!
+                if (cavesVisited [(int)ELocations.Cave1] && 1 != monsterCave) {
 					baby.transform.position = locations [(int)ELocations.Cave1];
 					babyCave = 1;
-					step++;
+                    pl1.setBabyGateIndex(babyCave);
+                    pl2.setBabyGateIndex(babyCave);
+                    step++;
 				} else if (cavesVisited [(int)ELocations.Cave2] && 2 != monsterCave) {
 					baby.transform.position = locations [(int)ELocations.Cave2];
 					babyCave = 2;
-					step++;
-				} else if (cavesVisited [(int)ELocations.Cave4] && 4 != monsterCave) {
+                    pl1.setBabyGateIndex(babyCave);
+                    pl2.setBabyGateIndex(babyCave);
+                    step++;
+                } else if (cavesVisited [(int)ELocations.Cave4] && 4 != monsterCave) {
 					baby.transform.position = locations [(int)ELocations.Cave4];
 					babyCave = 4;
-					step++;
-				}
+                    pl1.setBabyGateIndex(babyCave);
+                    pl2.setBabyGateIndex(babyCave);
+                    step++;
+                }
 				break;
 			case 4:
 				gameTimeOut -= Time.deltaTime;
@@ -309,14 +325,14 @@ public class StoryEngineScript : MonoBehaviour {
                         if (getPlayerRefrences())
                         {
                             if (7 > (player1.transform.position - baby.transform.position).magnitude) { 
-                                PlayersBehaviourScript p1 = player1.GetComponent<PlayersBehaviourScript>();
-                                p1.setPlayerLocationLock(true);
+                                PlayersBehaviourScript pla1 = player1.GetComponent<PlayersBehaviourScript>();
+                                pla1.setPlayerLocationLock(true);
                                 
                             }
                             if (7 > (player2.transform.position - baby.transform.position).magnitude)
                             {
-                                PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
-                                p2.setPlayerLocationLock(true);
+                                PlayersBehaviourScript pla2 = player2.GetComponent<PlayersBehaviourScript>();
+                                pla2.setPlayerLocationLock(true);
                             }
                             float dist1 = (baby.transform.position-player1.transform.position).magnitude;
                             float dist2 = (baby.transform.position-player2.transform.position).magnitude;
