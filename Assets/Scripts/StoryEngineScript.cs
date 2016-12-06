@@ -205,7 +205,8 @@ public class StoryEngineScript : MonoBehaviour {
 				if (true == getPlayerRefrences ()) {
                     float distP1 = (mother.transform.position - player1.transform.position).magnitude;
                     float distP2 = (mother.transform.position - player2.transform.position).magnitude;
-                    if (5 < distP1 && 5 < distP2) {
+                    print("Dist from Player1 : " + distP1 + " Dist from Player2: "+distP2);
+                    if (8 < distP1 || 8 < distP2) {
 					//if (8 < (mother.transform.position - player1.transform.position).magnitude) {
 						if (0 < warningTimeout) {
 							//print ("Warning time left: " + warningTimeout);						
@@ -317,8 +318,8 @@ public class StoryEngineScript : MonoBehaviour {
                                 PlayersBehaviourScript p2 = player2.GetComponent<PlayersBehaviourScript>();
                                 p2.setPlayerLocationLock(true);
                             }
-                            float dist1 = (mother.transform.position-player1.transform.position).magnitude;
-                            float dist2 = (mother.transform.position - player2.transform.position).magnitude;
+                            float dist1 = (baby.transform.position-player1.transform.position).magnitude;
+                            float dist2 = (baby.transform.position-player2.transform.position).magnitude;
                             if (dist1 > dist2)
                                 m.moveTo(player2.transform.position, 3.2f);
                             else

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayersBehaviourScript : MonoBehaviour
 {
-    enum RotationMode { Distrator, GuidedRotation, SnapToTarget, Free };
+    enum RotationMode { Distractor, GuidedRotation, SnapToTarget, Free };
     enum Gate { Cave1 = 1, Cave2 = 2, Cave3 = 3, Cave4 = 4, Loop = 5 };
 
     //inGate : keeps track of which cave the player is in. Cave3 => Spawning cave
@@ -11,7 +11,7 @@ public class PlayersBehaviourScript : MonoBehaviour
 
     private GameObject baby;
 
-    private RotationMode selectedMode = RotationMode.GuidedRotation;
+    private RotationMode selectedMode = RotationMode.Distractor;
 
     private Transform target;
     private GameObject distractor;
@@ -71,7 +71,7 @@ public class PlayersBehaviourScript : MonoBehaviour
             print("Player to Target to angle :" + targetAngle);
             switch (selectedMode)
             {
-                case (RotationMode.Distrator):
+                case (RotationMode.Distractor):
                     DistractorFunction(targetAngle);
                     break;
                 case (RotationMode.GuidedRotation):
