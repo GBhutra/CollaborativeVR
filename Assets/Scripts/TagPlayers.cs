@@ -4,8 +4,8 @@ using System.Collections;
 public class TagPlayers : MonoBehaviour
 {
 
-    private bool foundFirstPlayer = false;
-    private bool foundSecondPlayer = false;
+    public static bool foundFirstPlayer = false;
+    public static bool foundSecondPlayer = false;
 
     // Use this for initialization
     void Start()

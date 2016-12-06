@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class CallSlideshow : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class CallSlideshow : MonoBehaviour
     public bool sceneComplete = false;
     public bool isEnding = false;
     private float audioClipLength = 0.0f;
+    private bool slideShowTriggered = false;
+    
     //private int fadedSlides = 0;
 
     //Deprecated, but keeping if needed
@@ -177,12 +180,18 @@ public class CallSlideshow : MonoBehaviour
         //activate slideCanvas if not active
         //slideCanvas.SetActive(true);
         //getSlides();  //get all slides if need be
-        StartCoroutine(startSlideshow());
+        //StartCoroutine(startSlideshow());
     }
 
     // Update is called once per frame
     void Update()
     {
+       
+        if (TagPlayers.foundSecondPlayer && !slideShowTriggered)
+        {
+            StartCoroutine(startSlideshow());
+            slideShowTriggered = true;
+        }
 
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
@@ -199,6 +208,7 @@ public class CallSlideshow : MonoBehaviour
             //GameObject endingType = new GameObject ();
             //endingType.name = "goodEnd";
             //DontDestroyOnLoad (endingType);
+            SceneManager.LoadScene("caveScene");
             //Application.LoadLevel(Application.loadedLevel + 1);
             //make sure that we don't go too far when using this script for outro.
         }
